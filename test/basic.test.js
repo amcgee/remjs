@@ -51,14 +51,12 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).not.to.be.an('array');
         expect(res.body._id.length).to.eql(16);
         departmentID = res.body._id;
-        console.log( res.body);
         done();
       })
   });
   it('fetch new department', function(done){
     superagent.get(url + '/departments/' + departmentID)
       .end(function(e,res){
-        console.log( res.body );
         expect(e).to.eql(null);
         expect(res.status).to.eql(200);
         expect(res.body).to.be.an('object');
