@@ -14,7 +14,7 @@ npm install remjs
 
 #Usage
 
-(try it: `npm install && node examples/simple_example.js`)
+(try it: `git clone https://github.com/amcgee/remjs.git && cd remjs && npm install && node examples/simple_example.js`)
 ```javascript
 var express = require('express');
 var REM = require('remjs');
