@@ -14,7 +14,7 @@ var Scaffolding = function( resources ) {
 	this.db = {};
 	this.dbFiles = [];
 	_.forEach( _.keys(resources), function(name) {
-		var file = './test_data/' + this.port + '/' + name + '.db';
+		var file = './data/test-' + this.port + '/' + name + '.db';
 		this.db[name] = new Datastore({ filename: file, autoload: true });
 		this.dbFiles.push(file);
 	}.bind(this))

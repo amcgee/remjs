@@ -1,4 +1,4 @@
 *.sublime-project
 *.sublime-workspace
-test_data
+*.db
 node_modules
