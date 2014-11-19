@@ -1,10 +1,10 @@
 # REMJS
 
-Rapid Eye Movement (REM) : A dead-simple, full-featured REST API database wrapper.  Now go back to sleep, you were having a good dream.
+Rapid Eye Movement (REM) : A dead-simple REST API framework.  Now go back to sleep, you were having a good dream.
 
 Currently, only NeDB and a subset of MongoDB are supported backend engines.
 
-Current version: `0.1.3`
+Current version: `0.1.3 (alpha)`
 
 #Installation
 
