@@ -1,6 +1,6 @@
 {
   "name": "remjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Austin McGee",
     "email": "austin@remjs.org"
@@ -17,7 +17,7 @@
   "homepage": "http://www.remjs.org",
   "repository": {
     "type": "git",
-    "url": "git@github.com:amcgee/remjs.git"
+    "url": "https://github.com/amcgee/remjs.git"
   },
   "dependencies": {
     "lodash": "^2.4.1",
