@@ -1,6 +1,6 @@
 # REMJS Core
 
-Rapid Eye Movement (REM) : A dead-simple REST API framework.  Now go back to sleep, you were having a good dream.
+Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
 Currently, only NeDB and a subset of MongoDB are supported backend engines.
 
@@ -8,13 +8,19 @@ Current version: `0.1.3 (alpha)`
 
 ##Installation
 
+Install your favorite database, currently supported: 
+- [NeDB](https://github.com/louischatriot/nedb) for local data storage
+- [MongoDB](http://www.mongodb.org/) for more robust, production-grade use cases
+- *More coming soon!*
+
+Now, install remjs via npm
 ```shell
 npm install remjs
 ```
 
 ##Usage
 
-A simple example
+A simple example using [NeDB](https://github.com/louischatriot/nedb) for local data storage
 ```javascript
 var express = require('express');
 var REM = require('remjs');
@@ -56,7 +62,7 @@ npm install
 node examples/simple_example.js
 ```
 
-Now, you can interact with your new API however you please.  The following examples assume [cURL](http://curl.haxx.se/), [jq](http://stedolan.github.io/jq/) for JSON parsing, [NeDB](https://github.com/louischatriot/nedb) for local data storage, and basic linux terminal familiarity.
+Now, you can interact with your new API however you please.  The following examples assume [cURL](http://curl.haxx.se/), [jq](http://stedolan.github.io/jq/) for JSON parsing, and basic linux terminal familiarity.
 
 First, get the list of available resources at `_help`
 ```shell
