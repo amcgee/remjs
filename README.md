@@ -9,6 +9,7 @@ Current version: `0.1.3 (alpha)`
 ##Installation
 
 Install your favorite database, currently supported: 
+
 - [NeDB](https://github.com/louischatriot/nedb) for local data storage
 - [MongoDB](http://www.mongodb.org/) for more robust, production-grade use cases
 - *More coming soon, including various flavors of SQL by way of [knex](http://knexjs.org/)!*
@@ -137,7 +138,7 @@ curl -H "Content-Type: application/json" -d '{"name":"Joe Schmoe","salary":250}'
 
 Get the non-empty list.
 ```shell
-$ curl http://localhost:3000/api/departments/$DPTID/employees | jq '.'
+curl http://localhost:3000/api/departments/$DPTID/employees | jq '.'
 [
     {
       "departments_id": "9QWrPtnkK63Hb0WF",
