@@ -47,7 +47,7 @@ npm install
 node examples/simple_example.js
 ```
 
-Now, you can interact with your new API however you please.  If you're using CURL and [jq](http://stedolan.github.io/jq/) for JSON parsing:
+Now, you can interact with your new API however you please.  If you're using cURL and [jq](http://stedolan.github.io/jq/) for JSON parsing:
 
 ```shell
 $ curl http://localhost:3000/api/_help | jq '.'
