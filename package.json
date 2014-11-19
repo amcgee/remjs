@@ -1,0 +1,36 @@
+{
+  "name": "remjs",
+  "version": "0.11.1",
+  "author": {
+    "name": "Austin McGee",
+    "email": "austinwm@gmail.com"
+  },
+  "contributors": [
+    "Austin McGee"
+  ],
+  "description": "Rapid Eye Movement (REM) : A dead-simple, full-featured REST API database wrapper.  Now go back to sleep, you were having a good dream.",
+  "keywords": [
+    "rest",
+    "api",
+    "database"
+  ],
+  "homepage": "http://www.remjs.org",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:amcgee/remjs.git"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "express": "^4.10.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "expect.js": "^0.3.1",
+    "superagent": "^0.21.0"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec --timeout 10000"
+  },
+  "main": "index",
+  "licence": "MIT"
+}
