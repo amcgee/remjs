@@ -14,7 +14,6 @@ npm install remjs
 
 #Usage
 
-(try it: `git clone https://github.com/amcgee/remjs.git && cd remjs && npm install && node examples/simple_example.js`)
 ```javascript
 var express = require('express');
 var REM = require('remjs');
@@ -38,6 +37,14 @@ var options = {
 app.use( "/api", REM(options) );
 
 app.listen(3000);
+```
+
+Try it!
+```shell
+git clone https://github.com/amcgee/remjs.git
+cd remjs
+npm install
+node examples/simple_example.js
 ```
 
 Now, you can interact with your new API however you please.  If you're using CURL and [jq](http://stedolan.github.io/jq/) for JSON parsing:
