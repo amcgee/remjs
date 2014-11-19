@@ -2,7 +2,7 @@
 
 Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
-Currently, only NeDB and a subset of MongoDB are supported backend engines.
+Currently, only NeDB and a subset of MongoDB are supported backend engines, but more will be introduced soon.
 
 Current version: `0.1.3 (alpha)`
 
@@ -11,7 +11,7 @@ Current version: `0.1.3 (alpha)`
 Install your favorite database, currently supported: 
 - [NeDB](https://github.com/louischatriot/nedb) for local data storage
 - [MongoDB](http://www.mongodb.org/) for more robust, production-grade use cases
-- *More coming soon!*
+- *More coming soon, including various flavors of SQL by way of [knex](http://knexjs.org/)!*
 
 Now, install remjs via npm
 ```shell
@@ -152,9 +152,15 @@ Profit.
 
 #Other fun stuff
 
-##Contributions
+##Contributing
 
 Contributions are welcome.  This is still an early prototype, so there's a lot to do.
+
+### Tests
+
+Any new features should be testable, and the existing tests should pass.
+
+Run `npm test` to be sure everything is working.
 
 ##License
 
