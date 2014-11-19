@@ -75,7 +75,8 @@ curl http://localhost:3000/api/departments | jq '.'
 
 Ok, now let's POST a new department to that resource.  (Your `_id` will be different)
 ```shell
-curl -H "Content-Type: application/json" -d '{"name":"TPSReportDepartment","purpose":"NONE"}' http://localhost:3000/api/departments | jq '.'
+curl -H "Content-Type: application/json" -d '{"name":"TPSReportDepartment","purpose":"NONE"}' \
+    http://localhost:3000/api/departments | jq '.'
 {
   "name": "TPSReportDepartment",
   "purpose": "NONE",
@@ -118,7 +119,8 @@ curl http://localhost:3000/api/departments/$DPTID/employees | jq '.'
 
 Make it not empty.
 ```shell
-curl -H "Content-Type: application/json" -d '{"name":"Joe Schmoe","salary":250}' http://localhost:3000/api/departments/$DPTID/employees | jq '.'
+curl -H "Content-Type: application/json" -d '{"name":"Joe Schmoe","salary":250}' \
+    http://localhost:3000/api/departments/$DPTID/employees | jq '.'
 {
   "departments_id": "9QWrPtnkK63Hb0WF",
   "name": "Joe Schmoe",
