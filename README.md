@@ -12,7 +12,7 @@ Install your favorite database, currently supported:
 - [MongoDB](http://www.mongodb.org/) for more robust, production-grade use cases
 - *More coming soon, including various flavors of SQL by way of [knex](http://knexjs.org/)!*
 
-Now, install remjs via npm
+Now, install [remjs](http://npmjs.org/package/remjs) via [npm](http://npmjs.org)
 ```shell
 npm install remjs
 ```
