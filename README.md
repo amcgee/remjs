@@ -39,7 +39,7 @@ REM.serve( options );
 
 That's it!
 
-The important part is the options hash, which supports the following:
+The important part is the options hash, which supports the following ([REM.Server](#rem-server) and [REM.serve](#rem-server-remserve) extensions excluded):
 
 - *version* : The version to expose at `/_version`, useful if you're serving multiple REM versions.
 - *engine* : The database engine to use.  This should be a hash with a MongoDB-style accessor object for each resource.
