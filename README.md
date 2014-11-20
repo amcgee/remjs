@@ -153,7 +153,7 @@ Profit.
 
 ## Modifiers
 
-The following can be added to the query string of a URL to modify or limit the results.  They are modify the resulting database query, so the server doesn't need to do the processing.
+The following can be added to the query string of a URL to modify or limit the results.  They modify the resulting database query, so the server doesn't need to do the processing.
 
 ### fields
 
