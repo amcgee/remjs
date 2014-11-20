@@ -11,9 +11,6 @@ describe('REM rest api basic functionality (no schema validation):', function(){
     }
   });
 
-  before(function(){
-    scaffolding.start();
-  })
   after(function() {
     scaffolding.destroy();
   })

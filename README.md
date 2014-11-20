@@ -1,4 +1,4 @@
-# REMJS Core
+# REM
 
 Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
@@ -19,20 +19,13 @@ npm install remjs
 
 ##Basic Usage
 
-A simple example using [NeDB](https://github.com/louischatriot/nedb) for local data storage
+A simple example using the [REM.serve](#REMJS-Server-REM.serve) utility function and [NeDB](https://github.com/louischatriot/nedb) for local data storage
 ```javascript
-var express = require('express');
-var REM = require('remjs');
-var Datastore = require('nedb');
+var REM = require('../');
 
-var db = {
-    employees: new Datastore({ filename: './employees.db', autoload: true }),
-    departments: new Datastore({ filename: './departments.db', autoload: true })
-}
-var app = express();
 var options = {
+    dataDirectory: "./data/simple_example",
     version: "1.0",
-    engine: db,
     resources: {
         'employees': {},
         'departments': {
@@ -40,9 +33,8 @@ var options = {
         }
     }
 }
-app.use( "/api", REM(options) );
 
-app.listen(3000);
+REM.serve( options );
 ```
 
 That's it!
@@ -204,6 +196,23 @@ i.e. return the fourth, fifth, and sixth highest-paid employees
 GET /employees?sort=-salary&limit=3&skip=3
 ```
 
+##Server
+
+There is a simple Express server at `REM.Server`, a sample of its usage can be found in the `examples` directory.  The REMServer constructor takes a normal REM options object, but with the following additions:
+
+- *port* may be specified to indicate where the server should do its thing.  Defaults to process.env['PORT'] or 3000
+- *baseURL* the base URL at which the express server should do its thing.  Defaults to '/'
+
+The following API methods are available on a REMServer object:
+
+- *start*: Start the server (returns itself for chaining purposes)
+- *stop*: Stop the server
+
+### REM.serve
+
+To make things even more dead-simple, you can create and start a REMServer in one go by calling `REM.serve(options)`.  `options` is a REMServer options object with one addition:
+
+- *dataDirectory*: If specified, `options.engine` is no longer required and the server will automatically create local NeDB databases for you in the directory provided.  See the examples for use of `REM.serve`.
 
 #Other fun stuff
 

@@ -11,9 +11,6 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
     }
   });
 
-  before(function(){
-    scaffolding.start();
-  })
   after(function() {
     scaffolding.destroy();
   })
