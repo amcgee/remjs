@@ -21,7 +21,7 @@ npm install remjs
 
 A simple example using the [REM.serve](#rem-server-remserve) utility function and [NeDB](https://github.com/louischatriot/nedb) for local data storage
 ```javascript
-var REM = require('../');
+var REM = require('remjs');
 
 var options = {
     dataDirectory: "./data/simple_example",
