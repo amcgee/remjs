@@ -4,7 +4,7 @@ Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go 
 
 Currently, only NeDB and a subset of MongoDB are supported backend engines, but more will be introduced soon.
 
-Current version: `0.1.3 (alpha)`
+Current version: `0.1.4 (alpha)`
 
 ##Installation
 
@@ -19,7 +19,7 @@ Now, install remjs via npm
 npm install remjs
 ```
 
-##Usage
+##Basic Usage
 
 A simple example using [NeDB](https://github.com/louischatriot/nedb) for local data storage
 ```javascript
@@ -150,6 +150,62 @@ curl http://localhost:3000/api/departments/$DPTID/employees | jq '.'
 ```
 
 Profit.
+
+## Modifiers
+
+The following can be added to the query string of a URL to modify or limit the results.  They are modify the resulting database query, so the server doesn't need to do the processing.
+
+### fields
+
+Return only certain fields in the response.  This is a comma-delimeted list
+
+For instance, only include the employee names with `fields=name`
+
+```
+GET /employees?fields=name
+```
+
+Or the name and salary of a particular employee with `fields=name,salary`
+
+```
+GET /employees/<id>?fields=name,salary
+```
+
+*NOTE*: the id is also stripped by default, to include it add `_id` as a field parameter
+
+### sort
+
+Sort the results by the fields listed in the comma-delimited `sort` perameter.  Pre-pend a `-` to the field name to sort in reverse order.
+
+The database engine determines the sorting heuristics.
+
+Sort by salary (ascending), then by title (descending)
+
+```
+GET /employees?sort=salary,-title
+```
+
+
+### limit
+
+Only return the first `N` results with `?limit=N`, useful for pagination.
+
+i.e. get the top 3 highest-paid employees
+
+```
+GET /employees?sort=-salary&limit=3
+```
+
+### skip
+
+Skip the first `N` results with `?skip=N`, useful for pagination.
+
+i.e. return the fourth, fifth, and sixth highest-paid employees
+
+```
+GET /employees?sort=-salary&limit=3&skip=3
+```
+
 
 #Other fun stuff
 
