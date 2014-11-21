@@ -6,6 +6,11 @@ Currently, only NeDB and a subset of MongoDB are supported backend engines, but 
 
 ##Installation
 
+Prerequisites:
+
+- [NodeJS](http://www.nodejs.org)
+- [npm](http://www.npmjs.org)
+
 Install your favorite database, currently supported: 
 
 - [NeDB](https://github.com/louischatriot/nedb) for local data storage
