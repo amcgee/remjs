@@ -32,7 +32,8 @@ describe('REM rest api basic functionality (no schema validation):', function(){
   var user_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6eyJ1c2VybmFtZSI6IlRlc3RVc2VyIiwiX2lkIjoiVDVteUxKZG9jM2VTczYwVCJ9LCJpYXQiOjE0MTY4NjYwMDUuMTAxLCJleHAiOjE0MTY4Njc4MDUuMTAxfQ.JecmGi0H0do2IZCAa0iZfYT1G-xIz8U6w3Sb6ZWSG5A';
   var username = 'TestUser';
   var password = 'IAMAP4SSW0RD!';
-  var new_password = null;
+  var password2 = null;
+  var password3 = 'testingchange';
 
   it('Try to get the departments list (unauthenticated, should fail)', function(done){
     superagent.get(url + '/departments' )
@@ -124,7 +125,7 @@ describe('REM rest api basic functionality (no schema validation):', function(){
       done();
     })
   })
-  it('Change my password', function(done) {
+  it('Change my password (to random)', function(done) {
     superagent.del(url + '/me/_password' )
     .set('Authorization', 'Bearer ' + user_token)
     .send( {
@@ -136,7 +137,7 @@ describe('REM rest api basic functionality (no schema validation):', function(){
       // console.log(res.body);
       expect(res.text).to.be.an('string')
       expect(res.text.length).not.to.eql(0);
-      new_password = res.text;
+      password2 = res.text;
       done();
     })
   })
@@ -169,7 +170,77 @@ describe('REM rest api basic functionality (no schema validation):', function(){
     superagent.post(url + '/_login')
       .send( {
         login: username,
-        password: new_password
+        password: password2
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        expect(res.text).to.be.a('string');
+        expect(res.text.length).not.to.eql(0);
+        user_token = res.text;
+        done();
+      })
+  });
+
+  it('Make sure the new password login session worked', function(done) {
+    superagent.get(url + '/departments' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.be.an('array');
+      expect(res.body.length).to.eql(0);
+      done();
+    });
+  })
+
+  it('Change my password (to something explicit)', function(done) {
+    superagent.post(url + '/me/_password' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .send( {
+      old_password: password2,
+      new_password: 'testingchange'
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(200);
+      // console.log(res.body);
+      expect(res.text).to.be.an('string')
+      expect(res.text.length).not.to.eql(0);
+      done();
+    })
+  })
+  it('Check that the current "session" is still valid', function(done) {
+    superagent.get(url + '/departments' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.be.an('array');
+      expect(res.body.length).to.eql(0);
+      done();
+    });
+  })
+  it('Make sure the old password no longer works', function(done) {
+    superagent.post(url + '/_login')
+      .send( {
+        login: username,
+        password: password2
+      } )
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400);
+        done();
+      })
+  });
+
+  it('Log in with the new password', function(done) {
+    superagent.post(url + '/_login')
+      .send( {
+        login: username,
+        password: password3
       })
       .end(function(e,res){
         expect(e).to.eql(null);
