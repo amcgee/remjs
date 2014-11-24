@@ -195,6 +195,32 @@ describe('REM rest api basic functionality (no schema validation):', function(){
     });
   })
 
+  it('Try to change my password (as an unauthenticated user)', function(done) {
+    superagent.post(url + '/me/_password' )
+    .send( {
+      old_password: password2,
+      new_password: 'testingchange'
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(401);
+      done();
+    })
+  })
+
+  it('Try to reset my password (as an unauthenticated user)', function(done) {
+    superagent.del(url + '/me/_password' )
+    .send( {
+      old_password: password2,
+      new_password: 'testingchange'
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(401);
+      done();
+    })
+  })
+
   it('Change my password (to something explicit)', function(done) {
     superagent.post(url + '/me/_password' )
     .set('Authorization', 'Bearer ' + user_token)
@@ -205,7 +231,6 @@ describe('REM rest api basic functionality (no schema validation):', function(){
     .end(function(e,res){
       expect(e).to.eql(null);
       expect(res.status).to.eql(200);
-      // console.log(res.body);
       expect(res.text).to.be.an('string')
       expect(res.text.length).not.to.eql(0);
       done();
