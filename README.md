@@ -1,5 +1,7 @@
 # REM
 
+[![Build Status](https://travis-ci.org/amcgee/remjs.svg)](https://travis-ci.org/amcgee/remjs)
+
 Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
 Currently, only NeDB and a subset of MongoDB are supported backend engines, but more will be introduced soon.
