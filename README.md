@@ -44,7 +44,7 @@ REM.serve( options );
 
 That's it!
 
-The important part is the options hash, which supports the following ([REM.Server](#rem-server) and [REM.serve](#rem-server-remserve) extensions excluded):
+The important part is the options hash, which supports the following ([REM.Server](#utilities-rem-server) and [REM.serve](#utilities-rem-server-remserve) extensions excluded):
 
 - *version* : The version to expose at `/_version`, useful if you're serving multiple REM versions.
 - *engine* : The database engine to use.  This should be a hash with a MongoDB-style accessor object for each resource.
@@ -255,10 +255,10 @@ but it encodes the following:
 - An expiration time for the token (enforced server-side)
 
 ###Authenticated Requests
-To make authenticated requests, include the JWT token as a Bearer token in the `Authority` HTTP header, like so (assuming the token has been saved in the TOKEN environment variable):
+To make authenticated requests, include the JWT token as a Bearer token in the `Authorization` HTTP header, like so (assuming the token has been saved in the TOKEN environment variable):
 
 ```shell
-curl -H "Authority:Bearer $TOKEN" http://localhost:3000/departments
+curl -H "Authorization:Bearer $TOKEN" http://localhost:3000/departments
 ```
 
 ###Signup
