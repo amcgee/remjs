@@ -24,7 +24,7 @@ npm install remjs
 
 ##Basic Usage
 
-A simple example using the [REM.serve](#rem-server-remserve) utility function and [NeDB](https://github.com/louischatriot/nedb) for local data storage
+A simple example using the [REM.serve](#utilities-rem-server-remserve) utility function and [NeDB](https://github.com/louischatriot/nedb) for local data storage
 ```javascript
 var REM = require('remjs');
 
@@ -268,21 +268,6 @@ Additionally, the following actions are available under the `/me` namespace:
 ###Authentication Options
 The following are options available in the `options.authentication` object:
 
-- `login_path`: The path at which to listen for logins.  Default: `/_login`
-- `signup_path`: The path at which to listen for new signups.  Does nothing if `annonymous_signup` is not set to `true`.  Default: `/_signup`
-- `me_path`: The path at which to expose data about the currently logged in user.  Default: `/me`
-- `annonymous_signup`: set to `true` if annonymous users are allowed to create new accounts by posting a login and password to the `signup_path`.  Default: `false` 
-- `login_authority.resource`: The resource to use as the user store.  It must already exist.  Default: `users`
-- `login_authority.login_property`: The property of the login authority resource to use when looking up login names.  Must be unique.  Default: `username`
-- `login_authority.type`: The type of login authority.  Currently, the only available type is `basic`, also the default.
-- `login_authority.auth_property`: The property of the login authority resource to use when storing sensitive login information (namely the encrypted password, password salt, and number of pbkdf2 iterations.  Must begin with an `_` so it is never exposed by the API itself.  Default: `_auth`
-- `password_min_length`: The minimum character length of new passwords.  Default: `6`
-- `password_key_length`: (ADVANCED) The size to use when generating an encrypted password using pbkdf2.  Default: `64`
-- `password_salt_size`: (ADVANCED) The size to use when generating a password salt to use during pbkdf2 encryption.  Default: `64`
-- `password_pbkdf2_iterations`: (ADVANCED) The number of iterations to use when generating an encrypted password using pbkdf2.  Default: `10000`
-- `token_expiration_minutes`: (ADVANCED) The lifespan of authentication tokens.  Once a token has been issued, it will remain valid (meaning whoever presents that token will successfully authenticate as that user) for some number (token_expiration_minutes) of minutes.  Default: `30`
-- `jwt_secret`: (ADVANCED) The secret used to encrypt and decrypt JWT tokens.  By default this is a randomly generated string (which is secure but doesn't allow for horizontal scaling or token validity across server restarts).
-
 ```javascript
 var rem_options = {
   authentication: {
@@ -308,6 +293,21 @@ var rem_options = {
 })
 ```
 
+- `login_path`: The path at which to listen for logins.  Default: `/_login`
+- `signup_path`: The path at which to listen for new signups.  Does nothing if `annonymous_signup` is not set to `true`.  Default: `/_signup`
+- `me_path`: The path at which to expose data about the currently logged in user.  Default: `/me`
+- `annonymous_signup`: set to `true` if annonymous users are allowed to create new accounts by posting a login and password to the `signup_path`.  Default: `false` 
+- `login_authority.resource`: The resource to use as the user store.  It must already exist.  Default: `users`
+- `login_authority.login_property`: The property of the login authority resource to use when looking up login names.  Must be unique.  Default: `username`
+- `login_authority.type`: The type of login authority.  Currently, the only available type is `basic`, also the default.
+- `login_authority.auth_property`: The property of the login authority resource to use when storing sensitive login information (namely the encrypted password, password salt, and number of pbkdf2 iterations.  Must begin with an `_` so it is never exposed by the API itself.  Default: `_auth`
+- `password_min_length`: The minimum character length of new passwords.  Default: `6`
+- `password_key_length`: (ADVANCED) The size to use when generating an encrypted password using pbkdf2.  Default: `64`
+- `password_salt_size`: (ADVANCED) The size to use when generating a password salt to use during pbkdf2 encryption.  Default: `64`
+- `password_pbkdf2_iterations`: (ADVANCED) The number of iterations to use when generating an encrypted password using pbkdf2.  Default: `10000`
+- `token_expiration_minutes`: (ADVANCED) The lifespan of authentication tokens.  Once a token has been issued, it will remain valid (meaning whoever presents that token will successfully authenticate as that user) for some number (token_expiration_minutes) of minutes.  Default: `30`
+- `jwt_secret`: (ADVANCED) The secret used to encrypt and decrypt JWT tokens.  By default this is a randomly generated string (which is secure but doesn't allow for horizontal scaling or token validity across server restarts).
+
 
 #Utilities
 
@@ -323,7 +323,7 @@ The following API methods are available on a REMServer object:
 - *start*: Start the server (returns itself for chaining purposes)
 - *stop*: Stop the server
 
-## REM.serve
+### REM.serve
 
 To make things even more dead-simple, you can create and start a REMServer in one go by calling `REM.serve(options)`.  `options` is a REMServer options object with one addition:
 
