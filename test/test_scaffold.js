@@ -5,7 +5,7 @@ var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 
-var Scaffolding = function( resources ) {
+var Scaffolding = function( resources, options ) {
 	console.log( "Constructing test scaffolding...")
 	this.port = 3000 + Math.floor(Math.random()*1000);
 	
@@ -19,13 +19,13 @@ var Scaffolding = function( resources ) {
 
 	console.log( "Database files created.")
 
-	var options = {
+	options = _.extend( {
 		version: "TEST",
 		engine: this.db,
 		resources: resources,
 		baseURL: "/api",
 		port: this.port
-	}
+	}, options );
 	this.server = new REM.Server(options);
 	console.log( "Test scaffolding erected.")
 
@@ -46,6 +46,6 @@ Scaffolding.prototype.baseURL = function() {
 	return "http://localhost:" + this.port + "/api";
 }
 
-module.exports.create = function(options) {
-	return new Scaffolding(options);
+module.exports.create = function(resources,options) {
+	return new Scaffolding(resources,options);
 }
