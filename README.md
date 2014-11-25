@@ -201,7 +201,117 @@ i.e. return the fourth, fifth, and sixth highest-paid employees
 GET /employees?sort=-salary&limit=3&skip=3
 ```
 
-##Server
+##Authentication
+REM can easily be configured to use perform user authentication and (pseudo) session management (using JSON Web Tokens, so no server state is needed).  To enable authentication, simple supply an `authentication` property to your REM options.
+
+```javascript
+var REM = require('remjs');
+
+var options = {
+    dataDirectory: "./data/simple_example",
+    version: "1.0",
+    authentication: {
+      login_authority: {
+        resource: 'employees'
+      }
+    },
+    resources: {
+        'employees': {},
+        'departments': {
+            children: ['employees']
+        }
+    }
+}
+
+REM.serve( options );
+```
+
+In this example, we specified `employees` as the authentication login authority.  This allows employees to log in (assuming they've been added to the login system correctly, see [signup](#rem-authentication-signup) below).
+
+### Login
+
+Assuming a user has been created and a password assigned, logging in is simple.
+
+```shell
+curl -d '{"login": "joseph","password": "MyP4SSW0RD!"}' http://localhost:3000/_login
+```
+
+If authentication fails, the REM server replies with an HTTP 401 error.  If it succeeds, the server replies with an HTTP 200 OK and the body of the response is the new JSON Web Token which can be used to make authenticated requests.  A JSON web token looks like a bunch of random text:
+
+```
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6eyJ1c2VybmFtZSI6ImF1c3RpbiIsIl9pZCI6InNBajBzbnIzaHF3MjNob0oifSwiaWF0IjoxNDE2ODc1MDEwLjc5OCwiZXhwIjoxNDE2ODc2ODEwLjc5OH0.18gIxEhLpBuLnkiwBJbAWpEb-uQesH1E5q0dBa35Hqo
+```
+
+but it encodes the following:
+
+- The identity of the logged-in user
+- An expiration time for the token
+
+###Authenticated Requests
+To make authenticated requests, include the login token as a Bearer token in the `Authority` HTTP header, like so (assuming the token has been saved in the TOKEN environment variable:
+
+```shell
+curl -H "Authority:Bearer $TOKEN" http://localhost:3000/departments
+```
+
+###Signup
+If `options.authentication.annonymous_signup` is set to `true`, REM will allow unauthenticated POST requests to the `signup_path` directory (`/_signup` by default) to create new user accounts.  There is currently no spam protection or rate limiting on this endpoint, so use `annonymous_signup` with caution.
+
+###/Me
+Once a user has authenticated, the underlying user resource is exposed via the `/me` shortcut path.  This is a direct alias to the user resource, so if `login_authority.resource` is `users` and the logged-in user has ID `Om77wPVRTJWZSjNf`, the `/me` will return the same result as `/users/Om77wPVRTJWZSjNf`.
+
+Additionally, the following actions are available under the `/me` namespace:
+
+- `POST /me/_password`: Change the current user's password.  Requires a JSON-formatted body with `old_password` and `new_password` specified.  Return `200 OK` on success.
+- `DELETE /me/_password`: Reset the current user's password to something random.  Requires a JSON-formatted body with `old_password` specified.  Returns `200 OK` with the user's newly-generated password as the response body.
+
+###Authentication Options
+The following are options available in the `options.authentication` object:
+
+- `login_path`: The path at which to listen for logins.  Default: `/_login`
+- `signup_path`: The path at which to listen for new signups.  Does nothing if `annonymous_signup` is not set to `true`.  Default: `/_signup`
+- `me_path`: The path at which to expose data about the currently logged in user.  Default: `/me`
+- `annonymous_signup`: set to `true` if annonymous users are allowed to create new accounts by posting a login and password to the `signup_path`.  Default: `false` 
+- `login_authority.resource`: The resource to use as the user store.  It must already exist.  Default: `users`
+- `login_authority.login_property`: The property of the login authority resource to use when looking up login names.  Must be unique.  Default: `username`
+- `login_authority.type`: The type of login authority.  Currently, the only available type is `basic`, also the default.
+- `login_authority.auth_property`: The property of the login authority resource to use when storing sensitive login information (namely the encrypted password, password salt, and number of pbkdf2 iterations.  Must begin with an `_` so it is never exposed by the API itself.  Default: `_auth`
+- `password_min_length`: The minimum character length of new passwords.  Default: `6`
+- `password_key_length`: (ADVANCED) The size to use when generating an encrypted password using pbkdf2.  Default: `64`
+- `password_salt_size`: (ADVANCED) The size to use when generating a password salt to use during pbkdf2 encryption.  Default: `64`
+- `password_pbkdf2_iterations`: (ADVANCED) The number of iterations to use when generating an encrypted password using pbkdf2.  Default: `10000`
+- `token_expiration_minutes`: (ADVANCED) The lifespan of authentication tokens.  Once a token has been issued, it will remain valid (meaning whoever presents that token will successfully authenticate as that user) for some number (token_expiration_minutes) of minutes.  Default: `30`
+- `jwt_secret`: (ADVANCED) The secret used to encrypt and decrypt JWT tokens.  By default this is a randomly generated string (which is secure but doesn't allow for horizontal scaling or token validity across server restarts).
+
+```javascript
+var rem_options = {
+  authentication: {
+    login_path: '/_login',
+    signup_path: '/_signup',
+    me_path: '/me',
+    annonymous_signup: false,
+    login_authority: {
+      type: 'basic',
+      resource: 'users',
+      login_property: 'username',
+      auth_property: '_auth',
+
+    },
+    password_min_length: 6,
+    password_key_length: 64,
+    password_salt_size: 64,
+    password_pbkdf2_iterations: 10000,
+    token_expiration_minutes: 30,
+    jwt_secret: 'THISISATOPSECRETVALUETHATSHOULDBEUNGUESSABLEANDNEVERSHARED'
+  }
+  ...
+})
+```
+
+
+#Utilities
+
+##REM Server
 
 There is a simple Express server at `REM.Server`, a sample of its usage can be found in the `examples` directory.  The REMServer constructor takes a normal REM options object, but with the following additions:
 
@@ -213,7 +323,7 @@ The following API methods are available on a REMServer object:
 - *start*: Start the server (returns itself for chaining purposes)
 - *stop*: Stop the server
 
-### REM.serve
+## REM.serve
 
 To make things even more dead-simple, you can create and start a REMServer in one go by calling `REM.serve(options)`.  `options` is a REMServer options object with one addition:
 
