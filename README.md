@@ -146,6 +146,20 @@ curl http://localhost:3000/api/departments/$DPTID/employees | jq '.'
 
 Profit.
 
+## Resources
+
+At the heart of any REM configuration is a set of resources.  These are effectively the top-level collections in the data model.  Available REM options (which can also be specified at the top REM options level and will be inherited by sub-collections) are:
+
+- `engine`: The backend database engine
+- `id_key`: (partial support only) Specify the property to use as the canonical ID reference for this resource.  Default: `_id`, changing this may break things.
+- `private`: If set to `true`, this resoure will not be exposed at this location by the REST API.  The resource could still be exposed as a child or another resource, or used as an authentication user store.
+- `children`: The children of a particular resource.  This is effectively a `has-many` relationship.
+- `forbid`: The actions to forbid on this resource.  For instance, you can specify `fobid: ['post']` on a top-level resource to prevent users from POST-ing without going through a parent object (i.e. you can only create new employees within a department)
+- `filter`: The base filter to apply to all queries to the backend DB.
+- `defaults`: The default values to use when generating new documents within this resource.
+- `immutable_keys`: The set of keys that cannot be set or modified by an API user.  This can be useful when used in combination with `defaults`
+- `makeForeignKey`: A function used to name foreign-key properties that point to this resource.  Default: `function(target) { return target + "_id" }`
+
 ## Modifiers
 
 The following can be added to the query string of a URL to modify or limit the results.  They modify the resulting database query, so the server doesn't need to do the processing.
