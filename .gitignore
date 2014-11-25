@@ -2,3 +2,4 @@
 *.sublime-workspace
 *.db
 node_modules
+coverage
