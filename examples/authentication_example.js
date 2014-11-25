@@ -6,15 +6,14 @@ var options = {
     authentication: {
     	annonymous_signup: true,
     	login_authority: {
-    		resource: 'users'
+    		resource: 'employees'
     	}
     },
     resources: {
         'employees': {},
         'departments': {
             children: ['employees']
-        },
-        'users': {}
+        }
     }
 }
 
