@@ -8,7 +8,7 @@ var path = require('path');
 
 describe('REM.serve:', function(){
   var dir = "./data/serve_test";
-  before(function() {
+  before(function(done) {
     REM.serve({
       dataDirectory: dir,
       version: "1.0",
@@ -19,6 +19,7 @@ describe('REM.serve:', function(){
         }
       }
     })
+    setTimeout(done,100);
   })
   it('Make sure the employees database file was created.', function(){
     expect( fs.existsSync(path.join(dir, 'employees.db'))).to.be(true);
