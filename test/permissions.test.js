@@ -3,7 +3,7 @@ var expect = require('expect.js')
 var _ = require('lodash')
 var scaffold = require('./test_scaffold');
 
-describe('REM rest api basic functionality (no schema validation):', function(){
+describe('REM granular permissions functionality:', function(){
 	var scaffolding = scaffold.create({
     'things': {},
     'users': {
