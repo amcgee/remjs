@@ -1,6 +1,6 @@
-var superagent = require('superagent')
-var expect = require('expect.js')
-var _ = require('lodash')
+var superagent = require('superagent');
+var expect = require('expect.js');
+var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
 describe('REM rest api basic functionality (no schema validation):', function(){
@@ -13,7 +13,7 @@ describe('REM rest api basic functionality (no schema validation):', function(){
 
   after(function() {
     scaffolding.destroy();
-  })
+  });
 
   var url = scaffolding.baseURL();
   console.log( "Base URL: %s", url );
@@ -27,8 +27,8 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.be(0);
   			done();
-  		})
-  })
+  		});
+  });
 
   var departmentName = "TPSReportDepartment";
   var departmentPurpose = "NONE";
@@ -49,7 +49,7 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body._id.length).to.eql(16);
         departmentID = res.body._id;
         done();
-      })
+      });
   });
   it('fetch new department', function(done){
     superagent.get(url + '/departments/' + departmentID)
@@ -59,11 +59,11 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).to.be.an('object');
         expect(res.body).not.to.be.an('array');
         expect(res.body._id).to.eql(departmentID);
-        expect(res.body['name']).to.eql(departmentName);
-        expect(res.body['purpose']).to.eql(departmentPurpose);
-        done()
-      })
-  })
+        expect(res.body.name).to.eql(departmentName);
+        expect(res.body.purpose).to.eql(departmentPurpose);
+        done();
+      });
+  });
 
   it('create new employee (no department)', function(done){
     superagent.post(url + '/employees')
@@ -78,7 +78,7 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).not.to.be.an('array');
         expect(res.body._id.length).to.eql(16);
         done();
-      })
+      });
   });
 
   it('get the empty "TPSReportDepartment" employees list', function(done) {
@@ -89,9 +89,9 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).to.be.an('object');
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.eql(0);
-        done()
-      })
-  })
+        done();
+      });
+  });
   var employees = [];
   _.forEach( ['George Washington','Abraham Lincoln','Johnny Appleseed'], function(dummy_name) {
     it('add an employee', function(done){
@@ -109,9 +109,9 @@ describe('REM rest api basic functionality (no schema validation):', function(){
           expect(res.body.departments_id).to.eql(departmentID);
           employees.push(res.body._id);
           done();
-        })
-    })
-  })
+        });
+    });
+  });
 
   it('check that all the employees show up', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees')
@@ -126,9 +126,9 @@ describe('REM rest api basic functionality (no schema validation):', function(){
           ticklist = _.without( ticklist, employee._id );
         } );
         expect(ticklist.length).to.eql(0);
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('try getting an employee individually', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees/' + employees[0])
@@ -139,9 +139,9 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).not.to.be.an('array');
         expect(res.body._id).to.eql(employees[0]);
         expect(res.body.departments_id).to.eql(departmentID);
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('try to create an employee and overwrite departments_id (should fail)', function(done) {
     superagent.post(url + '/departments/' + departmentID + '/employees')
@@ -152,9 +152,9 @@ describe('REM rest api basic functionality (no schema validation):', function(){
       .end(function(e,res){
         expect(e).to.eql(null);
         expect(res.status).to.eql(400);
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('delete the employees', function(done) {
     _.forEach( employees, function( employee_id ) {
@@ -163,11 +163,11 @@ describe('REM rest api basic functionality (no schema validation):', function(){
           expect(e).to.eql(null);
           expect(res.status).to.eql(200);
           employees = _.without( employees, employee_id );
-          if ( employees.length == 0 )
+          if ( employees.length === 0 )
             done();
-          })
+        });
     });
-  })
+  });
   it('get the empty employees list again', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees')
       .end(function(e,res){
@@ -177,8 +177,8 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.eql(0);
         done();
-      })
-  })
+      });
+  });
 
   it('delete the department', function(done){
     superagent.del(url + '/departments/' + departmentID)
@@ -186,8 +186,8 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(e).to.eql(null);
         expect(res.status).to.eql(200);
         done();
-      })
-  })
+      });
+  });
 
   it('fetch the non-existent deleted department (should fail)', function(done){
     superagent.get(url + '/departments/' + departmentID)
@@ -195,6 +195,6 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(e).to.eql(null);
         expect(res.status).to.eql(404);
         done();
-      })
-  })
-})
+      });
+  });
+});

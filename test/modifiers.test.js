@@ -1,6 +1,6 @@
-var superagent = require('superagent')
-var expect = require('expect.js')
-var _ = require('lodash')
+var superagent = require('superagent');
+var expect = require('expect.js');
+var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
 describe('REM rest api modifier functionality (fields, sort, limit, skip):', function(){
@@ -13,7 +13,7 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
 
   after(function() {
     scaffolding.destroy();
-  })
+  });
 
   var url = scaffolding.baseURL();
   console.log( "Base URL: %s", url );
@@ -37,7 +37,7 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         expect(res.body._id.length).to.eql(16);
         departmentID = res.body._id;
         done();
-      })
+      });
   });
 
   it('create new employee (no department)', function(done){
@@ -53,7 +53,7 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         expect(res.body).not.to.be.an('array');
         expect(res.body._id.length).to.eql(16);
         done();
-      })
+      });
   });
 
   var employees = [];
@@ -73,9 +73,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
           expect(res.body.departments_id).to.eql(departmentID);
           employees.push(res.body._id);
           done();
-        })
-    })
-  })
+        });
+    });
+  });
 
   it('check that all the employees show up', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees')
@@ -90,9 +90,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
           ticklist = _.without( ticklist, employee._id );
         } );
         expect(ticklist.length).to.eql(0);
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('get all employees, sorted ascending by name', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees?sort=name')
@@ -111,9 +111,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
           lastName = res.body[i].name;
           i += 1;
         }
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('get all employees, sorted descending by name', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees?sort=-name')
@@ -132,9 +132,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
           lastName = res.body[i].name;
           i += 1;
         }
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   var twoEmployees = null;
   it('try getting just 2 employees (using limit, sort)', function(done) {
@@ -147,9 +147,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         expect(res.body.length).to.eql(2);
 
         twoEmployees = res.body;
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('try getting the second 2 employees (using limit, sort, and skip)', function(done) {
     superagent.get(url + '/departments/' + departmentID + '/employees?sort=name&limit=2&skip=1')
@@ -163,11 +163,11 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         expect(res.body[0].name).to.eql(twoEmployees[1].name);
         expect(res.body[1].name).not.to.eql(twoEmployees[0].name);
 
-        done()
-      })
-  })
+        done();
+      });
+  });
 
-  var commonName = "A John Smith"
+  var commonName = "A John Smith";
   it('add two employees with the same name but different titles', function(done){
     // These start with A so they are the first two in the limit below.
     superagent.post(url + '/employees')
@@ -199,9 +199,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
             expect(res.body.title).to.eql("Janitor");
             employees.push(res.body._id);
             done();
-          })
-      })
-  })
+          });
+      });
+  });
 
   it('try getting those 2 employees (using multiple column sort)', function(done) {
     superagent.get(url + '/employees?limit=2&sort=name,title')
@@ -218,9 +218,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         expect(res.body[0].title).to.eql("Director");
         expect(res.body[1].title).to.eql("Janitor");
 
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('try getting those 2 employees in reverse title order (again using multiple column sort)', function(done) {
     superagent.get(url + '/employees?limit=2&sort=name,-title')
@@ -237,9 +237,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         expect(res.body[0].title).to.eql("Janitor");
         expect(res.body[1].title).to.eql("Director");
 
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('try getting all the employees, but only the "name" field (no _id, title or location)', function(done) {
     superagent.get(url + '/employees?fields=name')
@@ -252,11 +252,11 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
         _.forEach( res.body, function( employee ) {
           expect( _.keys( employee ).length ).to.eql(1);
           expect( _.keys( employee )[0] ).to.eql("name");
-        })
+        });
 
-        done()
-      })
-  })
+        done();
+      });
+  });
 
   it('try getting all the employees, but only the "name" and "_id" fields (no location or title)', function(done) {
     superagent.get(url + '/employees?fields=name,_id')
@@ -270,11 +270,9 @@ describe('REM rest api modifier functionality (fields, sort, limit, skip):', fun
           expect( _.keys( employee ).length ).to.eql(2);
           expect( _.has(employee, "_id") ).to.be(true);
           expect( _.has(employee, "name") ).to.be(true);
-        })
+        });
 
-        done()
-      })
-  })
-
-  
-})
+        done();
+      });
+  });
+});
