@@ -8,6 +8,7 @@ var path = require('path');
 
 describe('REM.serve:', function(){
   var dir = "./data/serve_test";
+
   before(function(done) {
     REM.serve({
       dataDirectory: dir,
@@ -21,6 +22,16 @@ describe('REM.serve:', function(){
     })
     setTimeout(done,100);
   })
+  after(function(done) {
+    fs.unlink( path.join(dir, 'employees.db'), done );
+  })
+  after(function(done) {
+    fs.unlink( path.join(dir, 'departments.db'), done );
+  })
+  after(function(done) {
+    fs.rmdir( path.join(dir), done );
+  })
+
   it('Make sure the employees database file was created.', function(){
     expect( fs.existsSync(path.join(dir, 'employees.db'))).to.be(true);
   })

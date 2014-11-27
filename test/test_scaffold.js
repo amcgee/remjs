@@ -11,8 +11,9 @@ var Scaffolding = function( resources, options ) {
 	
 	this.db = {};
 	this.dbFiles = [];
+	this.dataDirectory = './data/test-' + this.port
 	_.forEach( _.keys(resources), function(name) {
-		var file = './data/test-' + this.port + '/' + name + '.db';
+		var file = path.join( this.dataDirectory, name + '.db' );
 		this.db[name] = new Datastore({ filename: file, autoload: true });
 		this.dbFiles.push(file);
 	}.bind(this))
@@ -35,11 +36,11 @@ var Scaffolding = function( resources, options ) {
 Scaffolding.prototype.destroy = function() {
 	this.server.stop();
 	console.log( "Destroying database files." )
+	var fileCount = 0;
 	_.forEach( this.dbFiles, function( file ) {
-		fs.unlink( file, function( err ) {
-			//PASS
-		} );
+		fs.unlinkSync( file );
 	})
+	fs.rmdirSync( this.dataDirectory )
 	return this;
 }
 Scaffolding.prototype.baseURL = function() {
