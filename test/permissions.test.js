@@ -3,7 +3,7 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM granular permissions functionality:', function(){
+describe('REM granular permissions:', function(){
 	var scaffolding = scaffold.create({
     'things': {},
     'users': {

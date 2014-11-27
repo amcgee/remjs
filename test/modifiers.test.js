@@ -3,7 +3,7 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM rest api modifier functionality (fields, sort, limit, skip):', function(){
+describe('REM modifiers (fields, sort, limit, skip):', function(){
 	var scaffolding = scaffold.create({
     'employees': {},
     'departments': {
