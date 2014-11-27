@@ -22,14 +22,10 @@ describe('REM.serve:', function(){
     })
     setTimeout(done,100);
   })
-  after(function(done) {
-    fs.unlink( path.join(dir, 'employees.db'), done );
-  })
-  after(function(done) {
-    fs.unlink( path.join(dir, 'departments.db'), done );
-  })
-  after(function(done) {
-    fs.rmdir( path.join(dir), done );
+  after(function() {
+    fs.unlinkSync( path.join(dir, 'employees.db') );
+    fs.unlinkSync( path.join(dir, 'departments.db') );
+    fs.rmdirSync( dir );
   })
 
   it('Make sure the employees database file was created.', function(){
