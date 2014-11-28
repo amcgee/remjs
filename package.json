@@ -23,7 +23,8 @@
     "lodash": "^2.4.1",
     "express": "^4.10.2",
     "body-parser": "^1.9.2",
-    "jwt-simple": "^0.2.0"
+    "jwt-simple": "^0.2.0",
+    "bluebird": "^2.3.11"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
