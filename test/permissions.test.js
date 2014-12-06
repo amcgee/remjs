@@ -31,9 +31,7 @@ describe('REM granular permissions:', function(){
               owner: identity.organization
             };
         },
-        'update': {
-          mutable: true
-        },
+        'update': 'mutable',
         'delete': false // only annonymous users can delete
       },
       annonymous: ['delete'] // annonymous users can delete things only
