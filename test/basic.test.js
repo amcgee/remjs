@@ -9,7 +9,7 @@ describe('REM rest api basic functionality (no schema validation):', function(){
     'departments': {
       children: ['employees']
     }
-  });
+  }).erect();
 
   after(function() {
     scaffolding.destroy();

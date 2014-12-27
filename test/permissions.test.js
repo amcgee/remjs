@@ -38,7 +38,7 @@ describe('REM granular permissions:', function(){
       },
       annonymous: ['delete'] // annonymous users can delete things only
     }
-  });
+  }).erect();
 
   after(function() {
     scaffolding.destroy();

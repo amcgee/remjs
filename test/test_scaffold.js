@@ -1,6 +1,5 @@
 var express = require('express');
 var REM = require('../index');
-var Datastore = require('nedb');
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
@@ -8,38 +7,40 @@ var path = require('path');
 var Scaffolding = function( resources, options ) {
 	console.log( "Constructing test scaffolding...");
 	this.port = 3000 + Math.floor(Math.random()*1000);
+	options = options || {};
 	
 	if ( !options.engine )
 	{
-		options.engine = {};
-		this.dbFiles = [];
+		this.dbFiles = {};
 		this.dataDirectory = './data/test-' + this.port;
 		_.forEach( _.keys(resources), function(name) {
 			var file = path.join( this.dataDirectory, name + '.db' );
-			options.engine[name] = new Datastore({ filename: file, autoload: true });
-			this.dbFiles.push(file);
+			this.dbFiles[name] = file;
 		}.bind(this));
+
+		options.engine = REM.engine.nedb({
+			dbFiles: this.dbFiles
+		});
 	}
 
 	console.log( "Database files created.");
 
 	this.options = _.extend( {
 		version: "TEST",
-		engine: this.db,
 		resources: resources,
 		baseURL: "/api",
 		port: this.port
 	}, options );
 };
 Scaffolding.prototype.erect = function() {
-	this.engine; = new MongoEngine( )
-	this.server = new REM.Server(options);
 	console.log( "Test scaffolding erected.");
-
+	this.server = new REM.Server(this.options);
 
 	console.log( "Starting test server...");
 	this.server.start();
-}
+
+	return this;
+};
 Scaffolding.prototype.destroy = function() {
 	this.server.stop();
 

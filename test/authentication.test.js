@@ -20,7 +20,7 @@ describe('REM authentication:', function(){
         resource: 'users'
       }
     }
-  });
+  }).erect();
 
   after(function() {
     scaffolding.destroy();

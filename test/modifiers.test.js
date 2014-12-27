@@ -9,7 +9,7 @@ describe('REM modifiers (fields, sort, limit, skip):', function(){
     'departments': {
       children: ['employees']
     }
-  });
+  }).erect();
 
   after(function() {
     scaffolding.destroy();
