@@ -14,11 +14,11 @@ var Scaffolding = function( name, resources, options, db ) {
 
 	if ( !options.engine )
 	{
-		var dbname = "test-" + this.port;
+		this.dbname = "test-" + this.port;
 		switch ( db ) {
 			case 'mongodb':
 				options.engine = REM.engine.mongodb({
-					dbname: dbname,
+					dbname: this.dbname,
 					host: 'localhost',
 					port: 27017
 				});
@@ -26,7 +26,7 @@ var Scaffolding = function( name, resources, options, db ) {
 			case 'nedb':
 			case null:
 			case undefined:
-				this.dataDirectory = './data/test-' + this.port;
+				this.dataDirectory = './data/' + this.dbname;
 				_.forEach( _.keys(resources), function(name) {
 					var file = path.join( this.dataDirectory, name + '.db' );
 					this.dbFiles[name] = file;
@@ -39,7 +39,7 @@ var Scaffolding = function( name, resources, options, db ) {
 			default:
 				throw new Error("Unknown database '" + db + "'");
 		}
-		console.log( "Database created : " + db + " - " + dbname );
+		console.log( "Database created : " + db + " - " + this.dbname );
 	}
 
 	this.options = _.extend( {

@@ -11,5 +11,8 @@ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | 
 sudo apt-get update
 sudo apt-get install -y mongodb-org
 
+wget http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb
+sudo dpkg -i influxdb_latest_amd64.deb
+
 cd /vagrant
 npm install
