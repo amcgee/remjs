@@ -4,7 +4,7 @@ var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
 describe('REM authentication:', function(){
-	var scaffolding = scaffold.create({
+	var scaffolding = scaffold.create('authentication', {
     'employees': {},
     'departments': {
       children: ['employees']
@@ -20,8 +20,11 @@ describe('REM authentication:', function(){
         resource: 'users'
       }
     }
-  }).erect();
+  });
 
+  before(function(done) {
+    scaffolding.erect(done);
+  });
   after(function() {
     scaffolding.destroy();
   });

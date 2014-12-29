@@ -19,13 +19,18 @@ describe('REM.serve:', function(){
             children: ['employees']
         }
       }
+    })
+    .delay(100)
+    .then(function() {
+      console.log("Created serve test files.");
+      done();
     });
-    setTimeout(done,100);
   });
   after(function() {
     fs.unlinkSync( path.join(dir, 'employees.db') );
     fs.unlinkSync( path.join(dir, 'departments.db') );
     fs.rmdirSync( dir );
+    console.log("Deleted serve test files.");
   });
 
   it('Make sure the employees database file was created.', function(){

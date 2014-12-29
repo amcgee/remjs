@@ -4,7 +4,7 @@ var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
 describe('REM granular permissions:', function(){
-	var scaffolding = scaffold.create({
+	var scaffolding = scaffold.create('permissions',{
     'things': {},
     'users': {
       permissions: {
@@ -28,18 +28,27 @@ describe('REM granular permissions:', function(){
             return true;
           else
             return {
-              owner: identity.organization
+              $and: [
+                { owner: { $exists: true } },
+                { owner: identity.organization }
+              ]
             };
         },
         'update': {
-          mutable: true
+          $and: [
+            { mutable: { $exists: true } },
+            { mutable: true }
+          ]
         },
         'delete': false // only annonymous users can delete
       },
       annonymous: ['delete'] // annonymous users can delete things only
     }
-  }).erect();
+  });
 
+  before(function(done) {
+    scaffolding.erect(done);
+  });
   after(function() {
     scaffolding.destroy();
   });
@@ -72,7 +81,7 @@ describe('REM granular permissions:', function(){
           login: user.username,
           password: user.password
         }).end(function(e,res) {
-          user._id = res.body._id;
+          user._id = res.body[0]._id;
           ++userCount;
           if ( userCount == users.length )
             done();
@@ -83,6 +92,11 @@ describe('REM granular permissions:', function(){
   before(function(done) {
     var userCount = 0;
     _.forEach( users, function(user) {
+      if ( !user.data || _.keys(user.data).length === 0 )
+      {
+        ++userCount;
+        return;
+      }
       superagent.patch(url+'/users/'+user._id)
         .send(user.data).end(function(e,res) {
           ++userCount;
@@ -261,7 +275,7 @@ describe('REM granular permissions:', function(){
       done();
     });
   });
-  it('Try to a thing (annonymous, should succeed)', function(done){
+  it('Try to delete a thing (annonymous, should succeed)', function(done){
     superagent.del(url + '/things/' + things[2]._id )
     .end(function(e,res){
       expect(e).to.eql(null);
