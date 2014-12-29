@@ -13,6 +13,7 @@ sudo apt-get install -y mongodb-org
 
 wget http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb
 sudo dpkg -i influxdb_latest_amd64.deb
+sudo /etc/init.d/influxdb start
 
 cd /vagrant
 npm install
