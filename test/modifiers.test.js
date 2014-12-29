@@ -3,20 +3,16 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM modifiers (fields, sort, limit, skip):', function(){
-	var scaffolding = scaffold.create({
-    'employees': {},
-    'departments': {
-      children: ['employees']
-    }
-  });
+var resources = {
+  'employees': {},
+  'departments': {
+    children: ['employees']
+  }
+};
+var options = {};
 
-  after(function() {
-    scaffolding.destroy();
-  });
-
-  var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
+scaffold.deploy('REM modifiers (fields, sort, limit, skip):', resources, options, function(scaffolding){
+	var url = scaffolding.baseURL();
 	
   var departmentName = "TPSReportDepartment";
   var departmentPurpose = "NONE";
@@ -34,7 +30,6 @@ describe('REM modifiers (fields, sort, limit, skip):', function(){
         expect(res.status).to.eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body).not.to.be.an('array');
-        expect(res.body._id.length).to.eql(16);
         departmentID = res.body._id;
         done();
       });
@@ -51,7 +46,6 @@ describe('REM modifiers (fields, sort, limit, skip):', function(){
         expect(res.status).to.eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body).not.to.be.an('array');
-        expect(res.body._id.length).to.eql(16);
         done();
       });
   });
@@ -68,7 +62,6 @@ describe('REM modifiers (fields, sort, limit, skip):', function(){
           expect(res.status).to.eql(201);
           expect(res.body).to.be.an('object');
           expect(res.body).not.to.be.an('array');
-          expect(res.body._id.length).to.eql(16);
           expect(res.body.name).to.eql(dummy_name);
           expect(res.body.departments_id).to.eql(departmentID);
           employees.push(res.body._id);
@@ -180,7 +173,6 @@ describe('REM modifiers (fields, sort, limit, skip):', function(){
         expect(res.status).to.eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body).not.to.be.an('array');
-        expect(res.body._id.length).to.eql(16);
         expect(res.body.name).to.eql(commonName);
         expect(res.body.title).to.eql("Director");
         employees.push(res.body._id);
@@ -194,7 +186,6 @@ describe('REM modifiers (fields, sort, limit, skip):', function(){
             expect(res.status).to.eql(201);
             expect(res.body).to.be.an('object');
             expect(res.body).not.to.be.an('array');
-            expect(res.body._id.length).to.eql(16);
             expect(res.body.name).to.eql(commonName);
             expect(res.body.title).to.eql("Janitor");
             employees.push(res.body._id);

@@ -3,49 +3,46 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM granular permissions:', function(){
-	var scaffolding = scaffold.create({
-    'things': {},
-    'users': {
-      permissions: {
-        annonymous: ['create','read','update','delete'] // anyone can do user things.  SUPER INSECURE!
-      }
-    }
-  }, {
-    authentication: {
-      annonymous_signup: true,
-      login_authority: {
-        resource: 'users'
-      }
-    },
+var resources = {
+  'things': {},
+  'users': {
     permissions: {
-      defaults: {
-        'create': function( identity ) {
-          return identity.is_the_special === true;
-        },
-        'read': function( identity ) {
-          if ( identity.is_the_special )
-            return true;
-          else
-            return {
-              owner: identity.organization
-            };
-        },
-        'update': {
-          mutable: true
-        },
-        'delete': false // only annonymous users can delete
-      },
-      annonymous: ['delete'] // annonymous users can delete things only
+      annonymous: ['create','read','update','delete'] // anyone can do user things.  SUPER INSECURE!
     }
-  });
+  }
+};
+var options = {
+  authentication: {
+    annonymous_signup: true,
+    login_authority: {
+      resource: 'users'
+    }
+  },
+  permissions: {
+    defaults: {
+      'create': function( identity ) {
+        return identity.is_the_special === true;
+      },
+      'read': function( identity ) {
+        if ( identity.is_the_special )
+          return true;
+        else
+          return {
+            $and: [
+              { owner: { $exists: true } },
+              { owner: identity.organization }
+            ]
+          };
+      },
+      'update': 'mutable',
+      'delete': false // only annonymous users can delete
+    },
+    annonymous: ['delete'] // annonymous users can delete things only
+  }
+};
 
-  after(function() {
-    scaffolding.destroy();
-  });
-
+scaffold.deploy('REM granular permissions:', resources, options, function(scaffolding){
   var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
 
   var users = [
     { username: 'Rando', password: 'IAMAP4SSW0RD!', data: {} },
@@ -72,7 +69,7 @@ describe('REM granular permissions:', function(){
           login: user.username,
           password: user.password
         }).end(function(e,res) {
-          user._id = res.body._id;
+          user._id = res.body[0]._id;
           ++userCount;
           if ( userCount == users.length )
             done();
@@ -83,6 +80,11 @@ describe('REM granular permissions:', function(){
   before(function(done) {
     var userCount = 0;
     _.forEach( users, function(user) {
+      if ( !user.data || _.keys(user.data).length === 0 )
+      {
+        ++userCount;
+        return;
+      }
       superagent.patch(url+'/users/'+user._id)
         .send(user.data).end(function(e,res) {
           ++userCount;
@@ -261,7 +263,7 @@ describe('REM granular permissions:', function(){
       done();
     });
   });
-  it('Try to a thing (annonymous, should succeed)', function(done){
+  it('Try to delete a thing (annonymous, should succeed)', function(done){
     superagent.del(url + '/things/' + things[2]._id )
     .end(function(e,res){
       expect(e).to.eql(null);

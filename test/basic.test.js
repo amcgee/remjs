@@ -3,20 +3,16 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM rest api basic functionality (no schema validation):', function(){
-	var scaffolding = scaffold.create({
-    'employees': {},
-    'departments': {
-      children: ['employees']
-    }
-  });
+var resources = {
+  'employees': {},
+  'departments': {
+    children: ['employees']
+  }
+};
+var options = {};
 
-  after(function() {
-    scaffolding.destroy();
-  });
-
-  var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
+scaffold.deploy('REM rest api basic functionality (no schema validation):', resources, options, function(scaffolding){
+	var url = scaffolding.baseURL();
 	
   it('fetch an empty collection', function(done){
   	superagent.get(url + '/departments')
@@ -46,7 +42,6 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.status).to.eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body).not.to.be.an('array');
-        expect(res.body._id.length).to.eql(16);
         departmentID = res.body._id;
         done();
       });
@@ -76,7 +71,6 @@ describe('REM rest api basic functionality (no schema validation):', function(){
         expect(res.status).to.eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body).not.to.be.an('array');
-        expect(res.body._id.length).to.eql(16);
         done();
       });
   });
@@ -104,7 +98,6 @@ describe('REM rest api basic functionality (no schema validation):', function(){
           expect(res.status).to.eql(201);
           expect(res.body).to.be.an('object');
           expect(res.body).not.to.be.an('array');
-          expect(res.body._id.length).to.eql(16);
           expect(res.body.name).to.eql(dummy_name);
           expect(res.body.departments_id).to.eql(departmentID);
           employees.push(res.body._id);
