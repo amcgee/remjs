@@ -5,9 +5,5 @@ node_js:
 services:
   - mongodb
 
-env:
-  - TESTDB=nedb
-  - TESTDB=mongo
-
 after_success:
   cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose

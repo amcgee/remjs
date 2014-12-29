@@ -3,23 +3,16 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM rest api basic functionality (no schema validation):', function(){
-	var scaffolding = scaffold.create('basic',{
-    'employees': {},
-    'departments': {
-      children: ['employees']
-    }
-  });
+var resources = {
+  'employees': {},
+  'departments': {
+    children: ['employees']
+  }
+};
+var options = {};
 
-  before(function(done) {
-    scaffolding.erect(done);
-  });
-  after(function() {
-    scaffolding.destroy();
-  });
-
-  var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
+scaffold.deploy('REM rest api basic functionality (no schema validation):', resources, options, function(scaffolding){
+	var url = scaffolding.baseURL();
 	
   it('fetch an empty collection', function(done){
   	superagent.get(url + '/departments')

@@ -3,23 +3,16 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM modifiers (fields, sort, limit, skip):', function(){
-	var scaffolding = scaffold.create('modifiers',{
-    'employees': {},
-    'departments': {
-      children: ['employees']
-    }
-  });
+var resources = {
+  'employees': {},
+  'departments': {
+    children: ['employees']
+  }
+};
+var options = {};
 
-  before(function(done) {
-    scaffolding.erect(done);
-  });
-  after(function() {
-    scaffolding.destroy();
-  });
-
-  var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
+scaffold.deploy('REM modifiers (fields, sort, limit, skip):', resources, options, function(scaffolding){
+	var url = scaffolding.baseURL();
 	
   var departmentName = "TPSReportDepartment";
   var departmentPurpose = "NONE";

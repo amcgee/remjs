@@ -3,34 +3,26 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM authentication:', function(){
-	var scaffolding = scaffold.create('authentication', {
-    'employees': {},
-    'departments': {
-      children: ['employees']
-    },
-    'users': {}
-  }, {
-    authentication: {
-      annonymous_signup: true,
-      signup_path: '/_signup',
-      login_path: '/_login',
-      //me_path: '/me',
-      login_authority: {
-        resource: 'users'
-      }
+var resources = {
+  'employees': {},
+  'departments': {
+    children: ['employees']
+  },
+  'users': {}
+};
+var options = {
+  authentication: {
+    annonymous_signup: true,
+    signup_path: '/_signup',
+    login_path: '/_login',
+    //me_path: '/me',
+    login_authority: {
+      resource: 'users'
     }
-  });
-
-  before(function(done) {
-    scaffolding.erect(done);
-  });
-  after(function() {
-    scaffolding.destroy();
-  });
-
+  }
+};
+scaffold.deploy('REM authentication:', resources, options, function(scaffolding){
   var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
 
   var user_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6eyJ1c2VybmFtZSI6IlRlc3RVc2VyIiwiX2lkIjoiVDVteUxKZG9jM2VTczYwVCJ9LCJpYXQiOjE0MTY4NjYwMDUuMTAxLCJleHAiOjE0MTY4Njc4MDUuMTAxfQ.JecmGi0H0do2IZCAa0iZfYT1G-xIz8U6w3Sb6ZWSG5A';
   var username = 'TestUser';

@@ -3,58 +3,51 @@ var expect = require('expect.js');
 var _ = require('lodash');
 var scaffold = require('./test_scaffold');
 
-describe('REM granular permissions:', function(){
-	var scaffolding = scaffold.create('permissions',{
-    'things': {},
-    'users': {
-      permissions: {
-        annonymous: ['create','read','update','delete'] // anyone can do user things.  SUPER INSECURE!
-      }
-    }
-  }, {
-    authentication: {
-      annonymous_signup: true,
-      login_authority: {
-        resource: 'users'
-      }
-    },
+var resources = {
+  'things': {},
+  'users': {
     permissions: {
-      defaults: {
-        'create': function( identity ) {
-          return identity.is_the_special === true;
-        },
-        'read': function( identity ) {
-          if ( identity.is_the_special )
-            return true;
-          else
-            return {
-              $and: [
-                { owner: { $exists: true } },
-                { owner: identity.organization }
-              ]
-            };
-        },
-        'update': {
-          $and: [
-            { mutable: { $exists: true } },
-            { mutable: true }
-          ]
-        },
-        'delete': false // only annonymous users can delete
-      },
-      annonymous: ['delete'] // annonymous users can delete things only
+      annonymous: ['create','read','update','delete'] // anyone can do user things.  SUPER INSECURE!
     }
-  });
+  }
+};
+var options = {
+  authentication: {
+    annonymous_signup: true,
+    login_authority: {
+      resource: 'users'
+    }
+  },
+  permissions: {
+    defaults: {
+      'create': function( identity ) {
+        return identity.is_the_special === true;
+      },
+      'read': function( identity ) {
+        if ( identity.is_the_special )
+          return true;
+        else
+          return {
+            $and: [
+              { owner: { $exists: true } },
+              { owner: identity.organization }
+            ]
+          };
+      },
+      'update': {
+        $and: [
+          { mutable: { $exists: true } },
+          { mutable: true }
+        ]
+      },
+      'delete': false // only annonymous users can delete
+    },
+    annonymous: ['delete'] // annonymous users can delete things only
+  }
+};
 
-  before(function(done) {
-    scaffolding.erect(done);
-  });
-  after(function() {
-    scaffolding.destroy();
-  });
-
+scaffold.deploy('REM granular permissions:', resources, options, function(scaffolding){
   var url = scaffolding.baseURL();
-  console.log( "Base URL: %s", url );
 
   var users = [
     { username: 'Rando', password: 'IAMAP4SSW0RD!', data: {} },
