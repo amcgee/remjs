@@ -15,6 +15,7 @@ var Scaffolding = function( name, resources, options, db ) {
 	if ( !options.engine )
 	{
 		this.dbname = "test-" + this.port;
+		this.dbtype = db;
 		switch ( db ) {
 			case 'mongodb':
 				options.engine = REM.engine.mongodb({
@@ -26,6 +27,7 @@ var Scaffolding = function( name, resources, options, db ) {
 			case 'nedb':
 			case null:
 			case undefined:
+				this.dbtype = 'nedb';
 				this.dataDirectory = './data/' + this.dbname;
 				_.forEach( _.keys(resources), function(name) {
 					var file = path.join( this.dataDirectory, name + '.db' );
@@ -62,18 +64,17 @@ Scaffolding.prototype.erect = function(done) {
 Scaffolding.prototype.destroy = function() {
 	this.server.stop();
 
-	if ( process.env.TESTDB == "mongo" ) {
-		this.options.engine.db.dropDatabase();
+	switch ( this.dbtype ) {
+		case 'mongodb':
+			this.options.engine.db.dropDatabase();	
+			break;
+		case 'nedb':
+			_.forEach( this.dbFiles, function( file ) {
+				fs.unlinkSync( file );
+			});
+			fs.rmdirSync( this.dataDirectory );
 	}
-	else if ( this.dataDirectory )
-	{
-		console.log( "Destroying database files." );
-		_.forEach( this.dbFiles, function( file ) {
-			fs.unlinkSync( file );
-		});
-		fs.rmdirSync( this.dataDirectory );
-	}
-	return this;
+	console.log( "Test database destroyed." );
 };
 Scaffolding.prototype.baseURL = function() {
 	return "http://localhost:" + this.port + "/api";

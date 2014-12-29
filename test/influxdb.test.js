@@ -48,7 +48,7 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
 					console.log(data);
 				});
 			})
-			.then(function() {
+			.finally(function() {
 				done();
 			});
 	});

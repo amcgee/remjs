@@ -5,5 +5,9 @@ node_js:
 services:
   - mongodb
 
+before_install:
+  - wget http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb -O /tmp/influxdb_latest_amd64.deb
+  - sudo dpkg -i /tmp/influxdb_latest_amd64.deb
+
 after_success:
   cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose
