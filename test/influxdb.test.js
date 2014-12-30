@@ -25,6 +25,7 @@ var resources = {
 		children: ['data']
 	},
 	'data': {
+		type: 'container',
 		engine: REM.engine.influxdb(influxOptions)
 	}
 };
@@ -42,7 +43,8 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
 				metaClient.options.database = scaffolding.dbname;
 				resources.data.engine.db.options.database = scaffolding.dbname;
 				return metaClient.writeSeriesAsync( {
-					'data': [ {test: true}, {test: false} ]
+					'a': [ {test: true}, {test: false} ],
+					'b': [ {test: true} ]
 				} )
 				.then(function(data) {
 					console.log(data);
@@ -72,7 +74,7 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
   });
 
   it('fetch some data', function(done){
-  	superagent.get(url + '/data')
+  	superagent.get(url + '/data/a')
   		.end(function(e,res){
   			expect(e).to.eql(null);
   			expect(res.status).to.eql(200);
@@ -80,6 +82,29 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.be(2);
   			done();
+  		});
+  });
+  it('fetch some data', function(done){
+  	superagent.get(url + '/data/b')
+  		.end(function(e,res){
+  			expect(e).to.eql(null);
+  			expect(res.status).to.eql(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be(1);
+  			done();
+  		});
+  });
+
+  it('try posting (should fail)', function(done){
+  	superagent.post(url + '/data/a')
+      .send({
+        bogus: true
+      })
+  		.end(function(e,res){
+  			expect(e).to.eql(null);
+  			expect(res.status).to.eql(405);
+        done();
   		});
   });
 
