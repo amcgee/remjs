@@ -107,5 +107,28 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
         done();
   		});
   });
+  it('test limiting', function(done){
+    superagent.get(url + '/data/a?limit=1')
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be(1);
+        done();
+      });
+  });
+
+  // it('try the subresource', function(done){
+  //   superagent.get(url + '//data/a?limit=1')
+  //     .end(function(e,res){
+  //       expect(e).to.eql(null);
+  //       expect(res.status).to.eql(200);
+  //       expect(res.body).to.be.an('object');
+  //       expect(res.body).to.be.an('array');
+  //       expect(res.body.length).to.be(1);
+  //       done();
+  //     });
+  // });
 
 });

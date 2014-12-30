@@ -149,6 +149,55 @@ scaffold.deploy('REM rest api basic functionality (no schema validation):', reso
       });
   });
 
+  it('update an employee but try to override the immutable department id (patch)', function(done) {
+    superagent.patch(url + '/departments/' + departmentID + '/employees/' + employees[0])
+      .send({
+        departments_id: 'HAXORS'
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400);
+        done();
+      });
+  });
+
+  it('update an employee but try to override the immutable department id (post)', function(done) {
+    superagent.post(url + '/departments/' + departmentID + '/employees/' + employees[0])
+      .send({
+        departments_id: 'HAXORS'
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400);
+        done();
+      });
+  });
+
+  it('update an employee but with an OK override (patch)', function(done) {
+    superagent.post(url + '/departments/' + departmentID + '/employees/' + employees[0])
+      .send({
+        name: 'Appleseed'
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        done();
+      });
+  });
+
+  it('update an employee but actually override the whole thing (post)', function(done) {
+    superagent.post(url + '/employees/' + employees[0])
+      .send({
+        departments_id: departmentID,
+        name: 'Fruitsprout'
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        done();
+      });
+  });
+
   it('delete the employees', function(done) {
     _.forEach( employees, function( employee_id ) {
       superagent.del(url + '/departments/' + departmentID + '/employees/'+ employee_id)
