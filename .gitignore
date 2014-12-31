@@ -1,5 +1,3 @@
-*.sublime-project
-*.sublime-workspace
 *.db
 .vagrant
 node_modules
