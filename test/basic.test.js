@@ -14,6 +14,29 @@ var options = {};
 scaffold.deploy('REM rest api basic functionality (no schema validation):', resources, options, function(scaffolding){
 	var url = scaffolding.baseURL();
 	
+  it('get the version', function(done){
+    superagent.get(url + '/_version')
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        console.log(scaffolding.options.version);
+        expect(res.text).to.be.a('string');
+        expect(res.text).to.eql(scaffolding.options.version);
+        done();
+      });
+  });
+
+  it('get the help text', function(done){
+    superagent.get(url + '/_help')
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.eql(_.keys(scaffolding.options.resources));
+        done();
+      });
+  });
+
   it('fetch an empty collection', function(done){
   	superagent.get(url + '/departments')
   		.end(function(e,res){
