@@ -24,6 +24,14 @@ var Scaffolding = function( name, resources, options, db ) {
 					port: 27017
 				});
 				break;
+			// case 'sql':
+			// 	options.engine = REM.engine.sql({
+			// 	  client: 'sqlite3',
+			// 	  connection: {
+			// 	    filename: "./data/" + this.dbname + ".sqlite.db"
+			// 	  }
+			// 	});
+			// 	break;
 			case 'nedb':
 			case null:
 			case undefined:
