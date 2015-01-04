@@ -65,6 +65,80 @@ scaffold.deploy('REM authentication:', resources, options, function(scaffolding)
   		});
   });
 
+  it('Attempt to create a user with no username (should fail)', function(done) {
+    superagent.post(url + '/_signup')
+      .send( {
+        password: password
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400); // Should be 403
+        done();
+      });
+  });
+
+  it('Attempt to create a user with no password (should fail)', function(done) {
+    superagent.post(url + '/_signup')
+      .send( {
+        username: username
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400); // Should be 403
+        done();
+      });
+  });
+
+  it('Attempt to hack the system with no username (should fail)', function(done) {
+    superagent.post(url + '/_login')
+      .send( {
+        password: password
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400); // Should be 403
+        done();
+      });
+  });
+
+  it('Attempt to hack the system with no password (should fail)', function(done) {
+    superagent.post(url + '/_login')
+      .send( {
+        username: username
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400); // Should be 403
+        done();
+      });
+  });
+
+  it('Fail to create another user with the same name', function(done){
+    superagent.post(url + '/_signup')
+      .send( {
+        login: username,
+        password: password
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400);
+        done();
+      });
+  });
+
+  it('Attempt to hack the system with a bad username (should fail)', function(done) {
+    superagent.post(url + '/_login')
+      .send( {
+        login: 'Hal',
+        password: password
+      })
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(400); // Should be 403
+        done();
+      });
+  });
+
   it('Attempt to hack the system with a bad password (should fail)', function(done) {
     superagent.post(url + '/_login')
       .send( {
@@ -120,6 +194,32 @@ scaffold.deploy('REM authentication:', resources, options, function(scaffolding)
       done();
     });
   });
+
+  it('Attempt to change my password without specifying the old one (to random, should fail)', function(done) {
+    superagent.del(url + '/me/_password' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .send( {
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(400);
+      done();
+    });
+  });
+
+  it('Attempt to change my password but specifying a bad old one (to random, should fail)', function(done) {
+    superagent.del(url + '/me/_password' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .send( {
+      password:password+'!'
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(400);
+      done();
+    });
+  });
+
   it('Change my password (to random)', function(done) {
     superagent.del(url + '/me/_password' )
     .set('Authorization', 'Bearer ' + user_token)
@@ -216,6 +316,32 @@ scaffold.deploy('REM authentication:', resources, options, function(scaffolding)
     });
   });
 
+  it('Attempt to change my password without specifying the old one (to something explicit, should fail)', function(done) {
+    superagent.post(url + '/me/_password' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .send( {
+      new_password:'HAXOR'
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(400);
+      done();
+    });
+  });
+
+  it('Attempt to change my password but specifying a bad old one (to something explicit, should fail)', function(done) {
+    superagent.post(url + '/me/_password' )
+    .set('Authorization', 'Bearer ' + user_token)
+    .send( {
+      old_password:password+'!',
+      new_password:'HAXOR'
+    })
+    .end(function(e,res){
+      expect(e).to.eql(null);
+      expect(res.status).to.eql(400);
+      done();
+    });
+  });
   it('Change my password (to something explicit)', function(done) {
     superagent.post(url + '/me/_password' )
     .set('Authorization', 'Bearer ' + user_token)
