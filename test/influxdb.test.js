@@ -118,6 +118,29 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
         done();
       });
   });
+  it('test skipping (unimplemented, but should succeed)', function(done){
+    superagent.get(url + '/data/a?skip=1')
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be(2);
+        done();
+      });
+  });
+
+  it('test sorting (unimplemented, but should succeed)', function(done){
+    superagent.get(url + '/data/a?sort=test')
+      .end(function(e,res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(200);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be(2);
+        done();
+      });
+  });
 
   // it('try the subresource', function(done){
   //   superagent.get(url + '//data/a?limit=1')

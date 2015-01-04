@@ -60,6 +60,24 @@ scaffold.deploy('REM rest api basic functionality (no schema validation):', reso
       });
   });
 
+  it('fail to overwrite a non-existent department', function(done) {
+    superagent.post(url + '/departments/abcdefghijk')
+      .end(function(e, res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(404);
+        done();
+      });
+  });
+
+  it('fail to patch a non-existent department', function(done) {
+    superagent.patch(url + '/departments/abcdefghijk')
+      .end(function(e, res){
+        expect(e).to.eql(null);
+        expect(res.status).to.eql(404);
+        done();
+      });
+  });
+
   it('create new employee (no department)', function(done){
     superagent.post(url + '/employees')
       .send({
