@@ -8,6 +8,8 @@
 
 Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
+This library is not yet fit for production use, but is steadily marching in that direction.  It is being developed to support [WellDone](https://www.welldone.org)'s management and data analytics portal.  Want to help out?  [Contact me](https://austinmcgee.net/contact) or just dive in.
+
 Currently, only NeDB and a subset of MongoDB are supported backend engines, but more will be introduced soon.
 
 ##Installation
