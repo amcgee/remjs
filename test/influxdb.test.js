@@ -1,12 +1,7 @@
-var superagent = require('superagent');
-var expect = require('expect.js');
-var _ = require('lodash');
 var scaffold = require('./test_scaffold');
+var _ = require('lodash');
 var REM = require('../');
 var influx = require('influx');
-var BPromise = require('bluebird');
-
-BPromise.promisifyAll(influx.InfluxDB.prototype);
 
 var influxOptions = {
 	hosts : [
@@ -31,9 +26,7 @@ var resources = {
 };
 var options = {};
 
-scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], function(scaffolding) {
-	var url = scaffolding.baseURL();
-
+scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], function(scaffolding, agent) {
 	before(function(done) {
 		metaClient.createDatabaseAsync( scaffolding.dbname )
 			.catch(function(err) {
@@ -62,96 +55,75 @@ scaffold.deploy('REM InfluxDB functionality.', resources, options, ['nedb'], fun
 	});
 	
   it('fetch an empty collection of sensors', function(done){
-  	superagent.get(url + '/sensors')
-  		.end(function(e,res){
-  			expect(e).to.eql(null);
-  			expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be(0);
-  			done();
-  		});
+  	agent
+      .get('/sensors')
+  		.expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(0);
+      })
+  		.end(done);
   });
 
   it('fetch some data', function(done){
-  	superagent.get(url + '/data/a')
-  		.end(function(e,res){
-  			expect(e).to.eql(null);
-  			expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be(2);
-  			done();
-  		});
+  	agent
+      .get('/data/a')
+  		.expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
+      })
+  		.end(done);
   });
   it('fetch some data', function(done){
-  	superagent.get(url + '/data/b')
-  		.end(function(e,res){
-  			expect(e).to.eql(null);
-  			expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be(1);
-  			done();
-  		});
+  	agent
+      .get('/data/b')
+  		.expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(1);
+      })
+  		.end(done);
   });
 
   it('try posting (should fail)', function(done){
-  	superagent.post(url + '/data/a')
+  	agent
+      .post('/data/a')
       .send({
         bogus: true
       })
-  		.end(function(e,res){
-  			expect(e).to.eql(null);
-  			expect(res.status).to.eql(405);
-        done();
-  		});
+  		.expect(405)
+      .end(done);
   });
   it('test limiting', function(done){
-    superagent.get(url + '/data/a?limit=1')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be(1);
-        done();
-      });
+    agent
+      .get('/data/a?limit=1')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(1);
+      })
+      .end(done);
   });
   it('test skipping (unimplemented, but should succeed)', function(done){
-    superagent.get(url + '/data/a?skip=1')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be(2);
-        done();
-      });
+    agent
+      .get('/data/a?skip=1')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
+      })
+      .end(done);
   });
 
   it('test sorting (unimplemented, but should succeed)', function(done){
-    superagent.get(url + '/data/a?sort=test')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.be(2);
-        done();
-      });
+    agent
+      .get('/data/a?sort=test')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
+      })
+      .end(done);
   });
-
-  // it('try the subresource', function(done){
-  //   superagent.get(url + '//data/a?limit=1')
-  //     .end(function(e,res){
-  //       expect(e).to.eql(null);
-  //       expect(res.status).to.eql(200);
-  //       expect(res.body).to.be.an('object');
-  //       expect(res.body).to.be.an('array');
-  //       expect(res.body.length).to.be(1);
-  //       done();
-  //     });
-  // });
-
 });

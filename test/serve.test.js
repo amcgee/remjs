@@ -1,5 +1,4 @@
-var superagent = require('superagent');
-var expect = require('expect.js');
+var should = require('chai').should;
 var _ = require('lodash');
 var REM = require('../index');
 
@@ -34,9 +33,11 @@ describe('REM.serve:', function(){
   });
 
   it('Make sure the employees database file was created.', function(){
-    expect( fs.existsSync(path.join(dir, 'employees.db'))).to.be(true);
+    fs.existsSync(path.join(dir, 'employees.db'))
+      .should.eql(true);
   });
   it('Make sure the departments database file was created.', function(){
-    expect( fs.existsSync(path.join(dir, 'departments.db'))).to.be(true);
+    fs.existsSync(path.join(dir, 'departments.db'))
+      .should.eql(true);
   });
 });

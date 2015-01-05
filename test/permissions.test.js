@@ -1,7 +1,5 @@
-var superagent = require('superagent');
-var expect = require('expect.js');
-var _ = require('lodash');
 var scaffold = require('./test_scaffold');
+var _ = require('lodash');
 
 var resources = {
   'things': {},
@@ -11,6 +9,7 @@ var resources = {
     }
   }
 };
+
 var options = {
   authentication: {
     annonymous_signup: true,
@@ -41,9 +40,7 @@ var options = {
   }
 };
 
-scaffold.deploy('REM granular permissions:', resources, options, function(scaffolding){
-  var url = scaffolding.baseURL();
-
+scaffold.deploy('REM granular permissions:', resources, options, function(scaffolding, agent){
   var users = [
     { username: 'Rando', password: 'IAMAP4SSW0RD!', data: {} },
     { username: 'special', password: 'IAMAP4SSW0RD!', data: {
@@ -64,11 +61,13 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
   before(function(done) {
     var userCount = 0;
     _.forEach( users, function(user) {
-      superagent.post(url+'/_signup')
+      agent
+        .post('/_signup')
         .send({
           login: user.username,
           password: user.password
-        }).end(function(e,res) {
+        })
+        .end(function(e,res) {
           user._id = res.body[0]._id;
           ++userCount;
           if ( userCount == users.length )
@@ -85,8 +84,10 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
         ++userCount;
         return;
       }
-      superagent.patch(url+'/users/'+user._id)
-        .send(user.data).end(function(e,res) {
+      agent
+        .patch('/users/'+user._id)
+        .send(user.data)
+        .end(function(e,res) {
           ++userCount;
           if ( userCount == users.length )
             done();
@@ -97,11 +98,13 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
   before(function(done) {
     var userCount = 0;
     _.forEach( users, function(user) {
-      superagent.post(url+'/_login')
+      agent
+        .post('/_login')
         .send({
           login: user.username,
           password: user.password
-        }).end(function(e,res) {
+        })
+        .end(function(e,res) {
           user.token = res.text;
           ++userCount;
           if ( userCount == users.length )
@@ -113,9 +116,11 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
   before(function(done) {
     var thingCount = 0;
     _.forEach( things, function(thing) {
-      superagent.post(url+'/things')
+      agent
+        .post('/things')
         .set('Authorization', 'Bearer ' + specialUser.token)
-        .send(thing).end(function(e,res) {
+        .send(thing)
+        .end(function(e,res) {
           thing._id = res.body._id;
           ++thingCount;
           if ( thingCount == things.length )
@@ -125,150 +130,133 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
   });
 
   it('Try to get the things list (unauthenticated, should fail)', function(done){
-    superagent.get(url + '/things' )
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(401);
-      expect(res.headers['www-authenticate']).to.eql('Bearer');
-      done();
-    });
+    agent
+      .get('/things' )
+      .expect(401)
+      .expect('www-authenticate', 'Bearer')
+      .end(done);
   });
 
   it('Try to create a thing as a non-special user (insufficient permissions, should fail)', function(done){
-    superagent.post(url + '/things' )
-    .set('Authorization', 'Bearer ' + randomUser.token)
-    .send({ name: 'dummy' })
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(403);
-      done();
-    });
+    agent
+      .post('/things' )
+      .set('Authorization', 'Bearer ' + randomUser.token)
+      .send({ name: 'dummy' })
+      .expect(403)
+      .end(done);
   });
   it('Try to create a thing as another non-special user (insufficient permissions, should fail)', function(done){
-    superagent.post(url + '/things' )
-    .set('Authorization', 'Bearer ' + lutherCorpUser.token)
-    .send({ name: 'dummy' })
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(403);
-      done();
-    });
+    agent
+      .post('/things' )
+      .set('Authorization', 'Bearer ' + lutherCorpUser.token)
+      .send({ name: 'dummy' })
+      .expect(403)
+      .end(done);
   });
   it('Try to create a thing as a special user (sufficient permissions, should succeed)', function(done){
-    superagent.post(url + '/things' )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .send({ name: 'dummy' })
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(201);
-      things.push( res.body );
-      done();
-    });
+    agent
+      .post('/things' )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .send({ name: 'dummy' })
+      .expect(201)
+      .end(function(e, res) {
+        if (e) return done(e);
+        things.push( res.body );
+        done();
+      });
   });
 
   it('Get the list of things as the random user (should be empty)', function(done){
-    superagent.get(url + '/things' )
-    .set('Authorization', 'Bearer ' + randomUser.token)
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(200);
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.be.a('array');
-      expect(res.body.length).to.eql(0);
-      done();
-    });
+    agent
+      .get('/things' )
+      .set('Authorization', 'Bearer ' + randomUser.token)
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.a('array');
+        res.body.length.should.eql(0);
+      })
+      .end(done);
   });
 
   it('Get the list of things as the LutherCorp user (should be just the LutherCorp thing)', function(done){
-    superagent.get(url + '/things' )
-    .set('Authorization', 'Bearer ' + lutherCorpUser.token)
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(200);
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.be.a('array');
-      expect(res.body.length).to.eql(1);
-      done();
-    });
+    agent
+      .get('/things' )
+      .set('Authorization', 'Bearer ' + lutherCorpUser.token)
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.a('array');
+        res.body.length.should.eql(1);
+      })
+      .end(done);
   });
   it('Get the list of things as the special user (should be all the things)', function(done){
-    superagent.get(url + '/things' )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(200);
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.be.a('array');
-      expect(res.body.length).to.eql(things.length);
-      done();
-    });
+    agent
+      .get('/things' )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.a('array');
+        res.body.length.should.eql(things.length);
+      })
+      .end(done);
   });
 
   it('Try to modify an immutable thing (any authenticated user, should fails)', function(done){
-    superagent.post(url + '/things/' + things[0]._id )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .send({
-      something: true
-    })
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(404); // THIS SHOULD BE 403?
-      done();
-    });
+    agent
+      .post('/things/' + things[0]._id )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .send({
+        something: true
+      })
+      .expect(404) // THIS SHOULD BE 403?
+      .end(done);
   });
 
   it('Try to modify an mutable thing (any authenticated user, should succeed)', function(done){
-    superagent.post(url + '/things/' + things[1]._id )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .send({
-      something: true
-    })
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(200);
-      done();
-    });
+    agent
+      .post('/things/' + things[1]._id )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .send({
+        something: true
+      })
+      .expect(200)
+      .end(done);
   });
   it('Make sure it was actually modified', function(done){
-    superagent.get(url + '/things/' + things[1]._id )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(200);
-      expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('something');
-      expect(res.body).not.to.have.property('mutable');
-      done();
-    });
+    agent
+      .get('/things/' + things[1]._id )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('object');
+        res.body.should.have.property('something');
+        res.body.should.not.have.property('mutable');
+      })
+      .end(done);
   });
   it('Try to modify the now-immutable thing again (any authenticated user, should fail)', function(done){
-    superagent.post(url + '/things/' + things[1]._id )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .send({
-      something: true
-    })
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(404); // THIS SHOULD BE 403?
-      done();
-    });
+    agent
+      .post('/things/' + things[1]._id )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .send({
+        something: true
+      })
+      .expect(404) // THIS SHOULD BE 403?
+      .end(done);
   });
 
   it('Try to delete a thing (any authenticated user, should fail)', function(done){
-    superagent.del(url + '/things/' + things[2]._id )
-    .set('Authorization', 'Bearer ' + specialUser.token)
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(403);
-      done();
-    });
+    agent
+      .del('/things/' + things[2]._id )
+      .set('Authorization', 'Bearer ' + specialUser.token)
+      .expect(403)
+      .end(done);
   });
+
   it('Try to delete a thing (annonymous, should succeed)', function(done){
-    superagent.del(url + '/things/' + things[2]._id )
-    .end(function(e,res){
-      expect(e).to.eql(null);
-      expect(res.status).to.eql(200);
-      done();
-    });
+    agent
+      .del('/things/' + things[2]._id )
+      .expect(200)
+      .end(done);
   });
 });

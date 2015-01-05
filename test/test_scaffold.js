@@ -3,6 +3,9 @@ var REM = require('../index');
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
+var supertest = require('supertest');
+var chai = require('chai');
+var should = chai.should();
 
 var test_databases = require('./test_databases');
 
@@ -58,10 +61,11 @@ var Scaffolding = function( name, resources, options, db ) {
 		baseURL: "/api",
 		port: this.port
 	}, options );
+
+	this.server = new REM.Server(this.options);
 };
 Scaffolding.prototype.erect = function(done) {
 	console.log( "Test scaffolding erected.");
-	this.server = new REM.Server(this.options);
 
 	console.log( "Starting test server...");
 	this.server.start()
@@ -101,17 +105,21 @@ module.exports.deploy = function(name, resources, options, dbs, body) {
 
 	var fn = function(test_name, db) {
 		var scaffolding = new Scaffolding(test_name, resources, options, db);
+		var agent = supertest(scaffolding.baseURL());
 		before(function(done) {
 	    scaffolding.erect(done);
   		console.log( "Base URL: %s", scaffolding.baseURL() );
+
 	  });
 	  after(function() {
 	    scaffolding.destroy();
 	  });
-	  body( scaffolding );
+	  body( scaffolding, agent );
 	};
 	_.forEach( dbs, function(db) {
 		var test_name = db + '::' + name;
 		describe( test_name, fn.bind(null,test_name, db) );
 	} );
 };
+
+module.exports.should = should;

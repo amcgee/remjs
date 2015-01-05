@@ -1,7 +1,6 @@
-var superagent = require('superagent');
-var expect = require('expect.js');
-var _ = require('lodash');
 var scaffold = require('./test_scaffold');
+var _ = require('lodash');
+
 
 var resources = {
   'employees': {},
@@ -11,259 +10,241 @@ var resources = {
 };
 var options = {};
 
-scaffold.deploy('REM modifiers (fields, sort, limit, skip):', resources, options, function(scaffolding){
-	var url = scaffolding.baseURL();
-	
+scaffold.deploy('REM modifiers (fields, sort, limit, skip):', resources, options, function(scaffolding, agent){
   var departmentName = "TPSReportDepartment";
   var departmentPurpose = "NONE";
 
   var departmentID = null;
 
   it('create new department', function(done){
-    superagent.post(url + '/departments')
+    agent
+      .post('/departments')
       .send({
         name: departmentName,
         purpose: departmentPurpose
       })
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(201);
-        expect(res.body).to.be.an('object');
-        expect(res.body).not.to.be.an('array');
+      .expect(201)
+      .expect(function(res) {
+        res.body.should.not.be.an('array');
         departmentID = res.body._id;
-        done();
-      });
+      })
+      .end(done);
   });
 
   it('create new employee (no department)', function(done){
-    superagent.post(url + '/employees')
+    agent
+      .post('/employees')
       .send({
         'name': "useless mcgee",
         'DOB': new Date()
       })
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(201);
-        expect(res.body).to.be.an('object');
-        expect(res.body).not.to.be.an('array');
-        done();
-      });
+      .expect(201)
+      .expect(function(res) {
+        res.body.should.not.be.an('array');
+      })
+      .end(done);
   });
 
   var employees = [];
   _.forEach( ['President George Washington','President Abraham Lincoln','Dude Johnny Appleseed'], function(dummy_name) {
     it('add an employee', function(done){
-      superagent.post(url + '/departments/' + departmentID + '/employees')
+      agent
+        .post('/departments/' + departmentID + '/employees')
         .send({
           name: dummy_name
         })
-        .end(function(e,res){
-          expect(e).to.eql(null);
-          expect(res.status).to.eql(201);
-          expect(res.body).to.be.an('object');
-          expect(res.body).not.to.be.an('array');
-          expect(res.body.name).to.eql(dummy_name);
-          expect(res.body.departments_id).to.eql(departmentID);
+        .expect(201)
+        .expect(function(res) {
+          res.body.should.not.be.an('array');
+          res.body.name.should.eql(dummy_name);
+          res.body.departments_id.should.eql(departmentID);
           employees.push(res.body._id);
-          done();
-        });
+        })
+        .end(done);
     });
   });
 
   it('check that all the employees show up', function(done) {
-    superagent.get(url + '/departments/' + departmentID + '/employees')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(employees.length);
+    agent
+      .get('/departments/' + departmentID + '/employees')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(employees.length);
         var ticklist = _.clone(employees);
         _.forEach( res.body, function( employee, i ) {
           ticklist = _.without( ticklist, employee._id );
         } );
-        expect(ticklist.length).to.eql(0);
-        done();
-      });
+        ticklist.length.should.eql(0);
+      })
+      .end(done);
   });
 
   it('get all employees, sorted ascending by name', function(done) {
-    superagent.get(url + '/departments/' + departmentID + '/employees?sort=name')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(employees.length);
+    agent
+      .get('/departments/' + departmentID + '/employees?sort=name')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(employees.length);
 
         var lastName = res.body[0].name;
         var i = 1;
         while ( i < res.body.length )
         {
-          expect(res.body[i].name).to.be.greaterThan(lastName);
+          res.body[i].name.should.be.greaterThan(lastName);
           lastName = res.body[i].name;
           i += 1;
         }
-        done();
-      });
+      })
+      .end(done);
   });
 
   it('get all employees, sorted descending by name', function(done) {
-    superagent.get(url + '/departments/' + departmentID + '/employees?sort=-name')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(employees.length);
+    agent
+      .get('/departments/' + departmentID + '/employees?sort=-name')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(employees.length);
         
         var lastName = res.body[0].name;
         var i = 1;
         while ( i < res.body.length )
         {
-          expect(res.body[i].name).to.be.lessThan(lastName);
+          res.body[i].name.should.be.lessThan(lastName);
           lastName = res.body[i].name;
           i += 1;
         }
-        done();
-      });
+      })
+      .end(done);
   });
 
   var twoEmployees = null;
   it('try getting just 2 employees (using limit, sort)', function(done) {
-    superagent.get(url + '/departments/' + departmentID + '/employees?sort=name&limit=2')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(2);
-
+    agent
+      .get('/departments/' + departmentID + '/employees?sort=name&limit=2')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
         twoEmployees = res.body;
-        done();
-      });
+      })
+      .end(done);
   });
 
   it('try getting the second 2 employees (using limit, sort, and skip)', function(done) {
-    superagent.get(url + '/departments/' + departmentID + '/employees?sort=name&limit=2&skip=1')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(2);
+    agent
+      .get('/departments/' + departmentID + '/employees?sort=name&limit=2&skip=1')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
 
-        expect(res.body[0].name).to.eql(twoEmployees[1].name);
-        expect(res.body[1].name).not.to.eql(twoEmployees[0].name);
-
-        done();
-      });
+        res.body[0].name.should.eql(twoEmployees[1].name);
+        res.body[1].name.should.not.eql(twoEmployees[0].name);
+      })
+      .end(done);
   });
 
   var commonName = "A John Smith";
   it('add two employees with the same name but different titles', function(done){
     // These start with A so they are the first two in the limit below.
-    superagent.post(url + '/employees')
+    agent
+      .post('/employees')
       .send({
         name: commonName,
         title: "Director"
       })
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(201);
-        expect(res.body).to.be.an('object');
-        expect(res.body).not.to.be.an('array');
-        expect(res.body.name).to.eql(commonName);
-        expect(res.body.title).to.eql("Director");
+      .expect(201)
+      .expect(function(res) {
+        res.body.should.not.be.an('array');
+        res.body.name.should.eql(commonName);
+        res.body.title.should.eql("Director");
         employees.push(res.body._id);
-        superagent.post(url + '/employees')
+      })
+      .end(function(e, res) {
+        if (e) return done(e);
+        agent
+          .post('/employees')
           .send({
             name: commonName,
             title: "Janitor"
           })
-          .end(function(e,res){
-            expect(e).to.eql(null);
-            expect(res.status).to.eql(201);
-            expect(res.body).to.be.an('object');
-            expect(res.body).not.to.be.an('array');
-            expect(res.body.name).to.eql(commonName);
-            expect(res.body.title).to.eql("Janitor");
+          .expect(201)
+          .expect(function(res) {
+            res.body.should.be.an('object');
+            res.body.should.not.be.an('array');
+            res.body.name.should.eql(commonName);
+            res.body.title.should.eql("Janitor");
             employees.push(res.body._id);
-            done();
-          });
+          })
+          .end(done);
       });
   });
 
   it('try getting those 2 employees (using multiple column sort)', function(done) {
-    superagent.get(url + '/employees?limit=2&sort=name,title')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(2);
+    agent
+      .get('/employees?limit=2&sort=name,title')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
 
-        expect(res.body[0].name).to.eql(commonName);
-        expect(res.body[1].name).to.eql(commonName);
+        res.body[0].name.should.eql(commonName);
+        res.body[1].name.should.eql(commonName);
 
-        expect(res.body[0].title).to.eql("Director");
-        expect(res.body[1].title).to.eql("Janitor");
-
-        done();
-      });
+        res.body[0].title.should.eql("Director");
+        res.body[1].title.should.eql("Janitor");
+      })
+      .end(done);
   });
 
   it('try getting those 2 employees in reverse title order (again using multiple column sort)', function(done) {
-    superagent.get(url + '/employees?limit=2&sort=name,-title')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
-        expect(res.body.length).to.eql(2);
+    agent
+      .get('/employees?limit=2&sort=name,-title')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
+        res.body.length.should.eql(2);
 
-        expect(res.body[0].name).to.eql(commonName);
-        expect(res.body[1].name).to.eql(commonName);
+        res.body[0].name.should.eql(commonName);
+        res.body[1].name.should.eql(commonName);
 
-        expect(res.body[0].title).to.eql("Janitor");
-        expect(res.body[1].title).to.eql("Director");
-
-        done();
-      });
+        res.body[0].title.should.eql("Janitor");
+        res.body[1].title.should.eql("Director");
+      })
+      .end(done);
   });
 
   it('try getting all the employees, but only the "name" field (no _id, title or location)', function(done) {
-    superagent.get(url + '/employees?fields=name')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
+    agent
+      .get('/employees?fields=name')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
         
         _.forEach( res.body, function( employee ) {
-          expect( _.keys( employee ).length ).to.eql(1);
-          expect( _.keys( employee )[0] ).to.eql("name");
+           _.keys( employee ).length.should.eql(1);
+           _.keys( employee )[0].should.eql("name");
         });
-
-        done();
-      });
+      })
+      .end(done);
   });
 
   it('try getting all the employees, but only the "name" and "_id" fields (no location or title)', function(done) {
-    superagent.get(url + '/employees?fields=name,_id')
-      .end(function(e,res){
-        expect(e).to.eql(null);
-        expect(res.status).to.eql(200);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.be.an('array');
+    agent
+      .get('/employees?fields=name,_id')
+      .expect(200)
+      .expect(function(res) {
+        res.body.should.be.an('array');
         
         _.forEach( res.body, function( employee ) {
-          expect( _.keys( employee ).length ).to.eql(2);
-          expect( _.has(employee, "_id") ).to.be(true);
-          expect( _.has(employee, "name") ).to.be(true);
+           _.keys( employee ).length.should.eql(2);
+           _.has(employee, "_id").should.eql(true);
+           _.has(employee, "name").should.eql(true);
         });
-
-        done();
-      });
+      })
+      .end(done);
   });
 });
