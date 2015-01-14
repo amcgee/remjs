@@ -26,9 +26,9 @@
     "jwt-simple": "^0.2.0",
     "bluebird": "^2.3.11",
     "nedb": "^1.1.1",
-    "influxdb": "0.0.1",
     "mongodb": "^1.4.28",
-    "knex": "^0.7.3"
+    "knex": "^0.7.3",
+    "influx": "^3.2.0"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
