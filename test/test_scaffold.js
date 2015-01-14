@@ -22,9 +22,7 @@ var Scaffolding = function( name, resources, options, db ) {
 		switch ( db ) {
 			case 'mongodb':
 				options.engine = REM.engine.mongodb({
-					dbname: this.dbname,
-					host: 'localhost',
-					port: 27017
+					url: 'mongodb://localhost:27017/'+this.dbname
 				});
 				break;
 			// case 'sql':
