@@ -1,6 +1,6 @@
 {
   "name": "remjs",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": {
     "name": "Austin McGee",
     "email": "austin@remjs.org"
@@ -35,7 +35,6 @@
     "istanbul": "^0.3.2",
     "jshint": "^2.5.10",
     "retire": "^0.3.7",
-
     "nedb": "^1.1.1",
     "mongodb": "^1.4.28",
     "knex": "^0.7.3",
