@@ -24,11 +24,7 @@
     "express": "^4.10.2",
     "body-parser": "^1.9.2",
     "jwt-simple": "^0.2.0",
-    "bluebird": "^2.3.11",
-    "nedb": "^1.1.1",
-    "mongodb": "^1.4.28",
-    "knex": "^0.7.3",
-    "influx": "^3.2.0"
+    "bluebird": "^2.3.11"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
@@ -38,7 +34,12 @@
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "^0.3.2",
     "jshint": "^2.5.10",
-    "retire": "^0.3.7"
+    "retire": "^0.3.7",
+
+    "nedb": "^1.1.1",
+    "mongodb": "^1.4.28",
+    "knex": "^0.7.3",
+    "influx": "^3.2.0"
   },
   "scripts": {
     "test": "retire -p && jshint index.js lib test && istanbul cover mocha --report lcovonly"
