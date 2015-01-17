@@ -17,4 +17,5 @@ deploy:
     secure: aEX8WNVjrTTHkeFZAMDA8OwER91lZR2cTPDtKVi/+KswPnf0XEey+tSc8AW2Jpd1Iw2u6ixHMbtA8yDDq3LoZcCls/Y/XQ9hahoa5SYCChQnu0TFDZXBG5b0YfLbcgkoOV3GSjhu7gVJn7RLJHNEeCBIhAF6e82dLGFyYzQZMDY=
   on:
     tags: true
+    all_branches: true
     repo: amcgee/remjs
