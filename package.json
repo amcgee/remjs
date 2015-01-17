@@ -41,7 +41,7 @@
     "influx": "^3.2.0"
   },
   "scripts": {
-    "test": "retire -p && jshint index.js lib test && istanbul cover mocha --report lcovonly"
+    "test": "jshint index.js lib test && istanbul cover mocha --report lcovonly"
   },
   "main": "index",
   "licence": "MIT"
