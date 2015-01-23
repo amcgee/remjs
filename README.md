@@ -6,6 +6,8 @@
 [![Coverage Status](https://coveralls.io/repos/amcgee/remjs/badge.png)](https://coveralls.io/r/amcgee/remjs)
 [![Code Climate](https://codeclimate.com/github/amcgee/remjs/badges/gpa.svg)](https://codeclimate.com/github/amcgee/remjs)
 
+[![Dependencies](https://david-dm.org/amcgee/remjs.svg)](https://david-dm.org/amcgee/remjs)
+
 Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
 This library is not yet fit for production use, but is steadily marching in that direction.  It is being developed to support [WellDone](https://www.welldone.org)'s management and data analytics portal.  Want to help out?  [Contact me](https://austinmcgee.net/contact) or just dive in.
