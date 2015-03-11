@@ -1,10 +1,12 @@
 # REM
 
 [![npm version](https://badge.fury.io/js/remjs.svg)](http://badge.fury.io/js/remjs)
+[![stability](https://img.shields.io/badge/stability-alpha-orange.svg?style=flat)](https://remjs.org)
 
 [![Build Status](https://travis-ci.org/amcgee/remjs.svg)](https://travis-ci.org/amcgee/remjs)
-[![Coverage Status](https://coveralls.io/repos/amcgee/remjs/badge.png)](https://coveralls.io/r/amcgee/remjs)
+[![Coverage Status](https://coveralls.io/repos/amcgee/remjs/badge.svg)](https://coveralls.io/r/amcgee/remjs)
 [![Code Climate](https://codeclimate.com/github/amcgee/remjs/badges/gpa.svg)](https://codeclimate.com/github/amcgee/remjs)
+[![Dependencies](https://david-dm.org/amcgee/remjs.svg)](https://david-dm.org/amcgee/remjs)
 
 Rapid Eye Movement (REM) : A dead-simple REST API framework for NodeJS.  Now go back to sleep, you were having a good dream.
 
