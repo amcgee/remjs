@@ -253,7 +253,7 @@ REM.serve( options );
 
 In this example, we specify `employees` as the authentication login authority.  This allows employees to log in (assuming they've been added to the login system correctly, see [signup](#rem-authentication-signup) below).  In this example we also allow anyone to sign up as an employee, which probably isn't a good way to run a business.
 
-### Annonymous access
+### Anonymous access
 
 Once authentication has been configured, un-authenticated users will always receive an `HTTP 401` error when accessing any REM resource.  The two notable exceptions are the [login](#rem-authentication-login) and [signup](#rem-authentication-signup) endpoints described in the following sections.
 
