@@ -14,6 +14,36 @@ This library is not yet fit for production use, but is steadily marching in that
 
 Currently, only NeDB and a subset of MongoDB are supported backend engines, but more will be introduced soon.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+  - [Installation](#installation)
+  - [Basic Usage](#basic-usage)
+  - [Resources](#resources)
+  - [Modifiers](#modifiers)
+    - [fields](#fields)
+    - [sort](#sort)
+    - [limit](#limit)
+    - [skip](#skip)
+  - [Authentication](#authentication)
+    - [Anonymous access](#anonymous-access)
+    - [Login](#login)
+    - [Authenticated Requests](#authenticated-requests)
+    - [Signup](#signup)
+    - [/Me](#me)
+    - [Authentication Options](#authentication-options)
+- [Utilities](#utilities)
+  - [REM Server](#rem-server)
+    - [REM.serve](#remserve)
+- [Other fun stuff](#other-fun-stuff)
+  - [Contributing](#contributing)
+    - [Tests](#tests)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
 ## Installation
 
 Prerequisites:
