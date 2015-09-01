@@ -14,7 +14,7 @@ This library is not yet fit for production use, but is steadily marching in that
 
 Currently, only NeDB and a subset of MongoDB are supported backend engines, but more will be introduced soon.
 
-##Installation
+## Installation
 
 Prerequisites:
 
@@ -32,7 +32,7 @@ Now, install [remjs](http://npmjs.org/package/remjs) via [npm](http://npmjs.org)
 npm install remjs
 ```
 
-##Basic Usage
+## Basic Usage
 
 A simple example using the [REM.serve](#utilities-rem-server-remserve) utility function and [NeDB](https://github.com/louischatriot/nedb) for local data storage
 ```javascript
@@ -225,7 +225,7 @@ i.e. return the fourth, fifth, and sixth highest-paid employees
 GET /employees?sort=-salary&limit=3&skip=3
 ```
 
-##Authentication
+## Authentication
 REM can easily be configured to perform user authentication and session management (using JSON Web Tokens, so no actual session state is needed on the server).  To enable authentication, simply supply an `authentication` property to your REM options.
 
 ```javascript
@@ -253,7 +253,7 @@ REM.serve( options );
 
 In this example, we specify `employees` as the authentication login authority.  This allows employees to log in (assuming they've been added to the login system correctly, see [signup](#rem-authentication-signup) below).  In this example we also allow anyone to sign up as an employee, which probably isn't a good way to run a business.
 
-### Annonymous access
+### Anonymous access
 
 Once authentication has been configured, un-authenticated users will always receive an `HTTP 401` error when accessing any REM resource.  The two notable exceptions are the [login](#rem-authentication-login) and [signup](#rem-authentication-signup) endpoints described in the following sections.
 
@@ -278,17 +278,17 @@ but it encodes the following:
 - The identity of the logged-in user
 - An expiration time for the token (enforced server-side)
 
-###Authenticated Requests
+### Authenticated Requests
 To make authenticated requests, include the JWT token as a Bearer token in the `Authorization` HTTP header, like so (assuming the token has been saved in the TOKEN environment variable):
 
 ```shell
 curl -H "Authorization:Bearer $TOKEN" http://localhost:3000/departments
 ```
 
-###Signup
+### Signup
 If `options.authentication.annonymous_signup` is set to `true`, REM will allow unauthenticated POST requests to `signup_path` (`/_signup` by default) to create new user accounts.  There is currently no spam protection or rate limiting on this endpoint, so use `annonymous_signup` with caution.
 
-###/Me
+### /Me
 Once a user has authenticated, the underlying user resource is exposed via the `/me` shortcut path.  This is a direct alias to the user resource, so if `login_authority.resource` is `users` and the logged-in user has ID `Om77wPVRTJWZSjNf`, the `/me` will return the same result as `/users/Om77wPVRTJWZSjNf`.
 
 Additionally, the following actions are available under the `/me` namespace:
@@ -296,7 +296,7 @@ Additionally, the following actions are available under the `/me` namespace:
 - `POST /me/_password`: Change the current user's password.  Requires a JSON-formatted body with `old_password` and `new_password` specified.  Return `200 OK` on success.
 - `DELETE /me/_password`: Reset the current user's password to something random.  Requires a JSON-formatted body with `old_password` specified.  Returns `200 OK` with the user's newly-generated password as the response body.
 
-###Authentication Options
+### Authentication Options
 The following are options available in the `options.authentication` object:
 
 ```javascript
@@ -340,9 +340,9 @@ var rem_options = {
 - `jwt_secret`: (ADVANCED) The secret used to encrypt and decrypt JWT tokens.  By default this is a randomly generated string (which is secure but doesn't allow for horizontal scaling or token validity across server restarts).
 
 
-#Utilities
+# Utilities
 
-##REM Server
+## REM Server
 
 There is a simple Express server at `REM.Server`, a sample of its usage can be found in the `examples` directory.  The REMServer constructor takes a normal REM options object, but with the following additions:
 
@@ -360,9 +360,9 @@ To make things even more dead-simple, you can create and start a REMServer in on
 
 - *dataDirectory*: If specified, `options.engine` is no longer required and the server will automatically create local NeDB databases for you in the directory provided.  See the examples for use of `REM.serve`.
 
-#Other fun stuff
+# Other fun stuff
 
-##Contributing
+## Contributing
 
 Contributions are welcome.  This is still an early prototype, so there's a lot to do.
 
@@ -372,6 +372,6 @@ Any new features should be testable, and the existing tests should pass.
 
 Run `npm test` to be sure everything is working.
 
-##License
+## License
 
 [MIT](http://opensource.org/licenses/MIT)
