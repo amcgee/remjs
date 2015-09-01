@@ -9,8 +9,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # config.vm.box_check_update = false
 
-  config.vm.network "forwarded_port", guest: 2083, host: 2083
-  config.vm.network "forwarded_port", guest: 2086, host: 2086
+  # MongoDB
+  config.vm.network "forwarded_port", guest: 27017, host: 27017
 
   config.vm.provision "shell", path: "automation/provision.sh"
 

@@ -1,13 +1,10 @@
 language: node_js
 node_js:
+  - '0.12'
   - '0.11'
   - '0.10'
 services:
   - mongodb
-before_install:
-  - wget http://s3.amazonaws.com/influxdb/influxdb_latest_amd64.deb -O /tmp/influxdb_latest_amd64.deb
-  - sudo dpkg -i /tmp/influxdb_latest_amd64.deb
-  - sudo /etc/init.d/influxdb start
 after_success:
   cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose
 deploy:
@@ -19,3 +16,5 @@ deploy:
     tags: true
     all_branches: true
     repo: amcgee/remjs
+notifications:
+  slack: welldonetech:yF3HybtHHNfxzf0nKhEyG0mC
