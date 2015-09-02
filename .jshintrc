@@ -1,4 +1,9 @@
 {
 	"node": true,
-	"laxcomma": true
+	"laxcomma": true,
+	"globalstrict": true,
+	"strict": false,
+	"quotmark": false,
+	"undef": true,
+	"unused": true
 }
