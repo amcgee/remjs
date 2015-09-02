@@ -5,14 +5,14 @@ var resources = {
   'things': {},
   'users': {
     permissions: {
-      annonymous: ['create','read','update','delete'] // anyone can do user things.  SUPER INSECURE!
+      anonymous: ['create','read','update','delete'] // anyone can do user things.  SUPER INSECURE!
     }
   }
 };
 
 var options = {
   authentication: {
-    annonymous_signup: true,
+    anonymous_signup: true,
     login_authority: {
       resource: 'users'
     }
@@ -34,9 +34,9 @@ var options = {
           };
       },
       'update': 'mutable',
-      'delete': false // only annonymous users can delete
+      'delete': false // only anonymous users can delete
     },
-    annonymous: ['delete'] // annonymous users can delete things only
+    anonymous: ['delete'] // anonymous users can delete things only
   }
 };
 
@@ -253,7 +253,7 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
       .end(done);
   });
 
-  it('Try to delete a thing (annonymous, should succeed)', function(done){
+  it('Try to delete a thing (anonymous, should succeed)', function(done){
     agent
       .del('/things/' + things[2]._id )
       .expect(200)

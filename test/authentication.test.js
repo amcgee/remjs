@@ -11,7 +11,7 @@ var resources = {
 
 var options = {
   authentication: {
-    annonymous_signup: true,
+    anonymous_signup: true,
     signup_path: '/_signup',
     login_path: '/_login',
     //me_path: '/me',
