@@ -72,7 +72,7 @@ scaffold.deploy('REM modifiers (fields, sort, limit, skip):', resources, options
         res.body.should.be.an('array');
         res.body.length.should.eql(employees.length);
         var ticklist = _.clone(employees);
-        _.forEach( res.body, function( employee, i ) {
+        _.forEach( res.body, function( employee ) {
           ticklist = _.without( ticklist, employee._id );
         } );
         ticklist.length.should.eql(0);
@@ -163,7 +163,7 @@ scaffold.deploy('REM modifiers (fields, sort, limit, skip):', resources, options
         res.body.title.should.eql("Director");
         employees.push(res.body._id);
       })
-      .end(function(e, res) {
+      .end(function(e) {
         if (e) return done(e);
         agent
           .post('/employees')

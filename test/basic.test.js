@@ -151,7 +151,7 @@ scaffold.deploy('REM rest api basic functionality (no schema validation):', reso
         res.body.should.be.an('array');
         res.body.length.should.eql(employees.length);
         var ticklist = _.clone(employees);
-        _.forEach( res.body, function( employee, i ) {
+        _.forEach( res.body, function( employee ) {
           ticklist = _.without( ticklist, employee._id );
         } );
         ticklist.length.should.eql(0);
@@ -229,7 +229,7 @@ scaffold.deploy('REM rest api basic functionality (no schema validation):', reso
       agent
         .del('/departments/' + departmentID + '/employees/'+ employee_id)
         .expect(200)
-        .end(function(err, res) {
+        .end(function() {
           employees = _.without( employees, employee_id );
           if ( employees.length === 0 )
             done();

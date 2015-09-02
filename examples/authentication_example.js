@@ -15,6 +15,6 @@ var options = {
             children: ['employees']
         }
     }
-}
+};
 
 REM.serve( options );
