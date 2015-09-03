@@ -21,16 +21,16 @@ var options = {
 describe( "REM initializations with bad options.", function() {
   it( "Omit the version", function() {
     should.Throw(function() {
-      var rem = new REM(_.omit(options, 'version'));
+      new REM(_.omit(options, 'version'));
     });
   } );
   it( "Omit the engine", function() {
     should.Throw(function() {
-      var rem = new REM(_.omit(options, 'engine'));
+      new REM(_.omit(options, 'engine'));
     });
   } );
 } );
 
-scaffold.deploy('REM rest api basic functionality (no schema validation):', resources, options, function(scaffolding, agent){
+scaffold.deploy('REM rest api basic functionality (no schema validation):', resources, options, function(){
     
 });

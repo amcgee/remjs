@@ -1,4 +1,3 @@
-var express = require('express');
 var REM = require('../index');
 var _ = require('lodash');
 var fs = require('fs');
@@ -105,15 +104,15 @@ module.exports.deploy = function(name, resources, options, dbs, body) {
 		var scaffolding = new Scaffolding(test_name, resources, options, db);
 		var agent = supertest(scaffolding.baseURL());
 		before(function(done) {
-	    scaffolding.erect(done);
-  		console.log( "Base URL: %s", scaffolding.baseURL() );
-
-	  });
-	  after(function() {
-	    scaffolding.destroy();
-	  });
-	  body( scaffolding, agent );
+			scaffolding.erect(done);
+			console.log( "Base URL: %s", scaffolding.baseURL() );
+		});
+		after(function() {
+			scaffolding.destroy();
+		});
+		body( scaffolding, agent );
 	};
+
 	_.forEach( dbs, function(db) {
 		var test_name = db + '::' + name;
 		describe( test_name, fn.bind(null,test_name, db) );

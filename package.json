@@ -33,14 +33,14 @@
     "coveralls": "^2.11.2",
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "^0.3.2",
-    "jshint": "^2.5.10",
+    "jshint": "^2",
     "retire": "^0.3.7",
     "nedb": "^1.1.1",
     "mongodb": "^1.4.28",
     "knex": "^0.7.3"
   },
   "scripts": {
-    "test": "jshint index.js lib test && istanbul cover mocha --report lcovonly"
+    "test": "jshint . && istanbul cover mocha --report lcovonly"
   },
   "main": "index",
   "licence": "MIT"

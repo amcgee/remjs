@@ -87,7 +87,7 @@ scaffold.deploy('REM granular permissions:', resources, options, function(scaffo
       agent
         .patch('/users/'+user._id)
         .send(user.data)
-        .end(function(e,res) {
+        .end(function() {
           ++userCount;
           if ( userCount == users.length )
             done();

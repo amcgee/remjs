@@ -1,5 +1,3 @@
-var should = require('chai').should;
-var _ = require('lodash');
 var REM = require('../index');
 
 var fs = require('fs');

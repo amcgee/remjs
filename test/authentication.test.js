@@ -1,5 +1,4 @@
 var scaffold = require('./test_scaffold');
-var _ = require('lodash');
 
 var resources = {
   'employees': {},
