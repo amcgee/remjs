@@ -43,5 +43,5 @@
     "test": "jshint . && istanbul cover mocha --report lcovonly"
   },
   "main": "index",
-  "licence": "MIT"
+  "license": "MIT"
 }
