@@ -265,7 +265,7 @@ var options = {
     dataDirectory: "./data/authentication_example",
     version: "1.0",
     authentication: {
-      annonymous_signup: true,
+      anonymous_signup: true,
       login_authority: {
         resource: 'employees'
       }
@@ -316,7 +316,7 @@ curl -H "Authorization:Bearer $TOKEN" http://localhost:3000/departments
 ```
 
 ### Signup
-If `options.authentication.annonymous_signup` is set to `true`, REM will allow unauthenticated POST requests to `signup_path` (`/_signup` by default) to create new user accounts.  There is currently no spam protection or rate limiting on this endpoint, so use `annonymous_signup` with caution.
+If `options.authentication.anonymous_signup` is set to `true`, REM will allow unauthenticated POST requests to `signup_path` (`/_signup` by default) to create new user accounts.  There is currently no spam protection or rate limiting on this endpoint, so use `anonymous_signup` with caution.
 
 ### /Me
 Once a user has authenticated, the underlying user resource is exposed via the `/me` shortcut path.  This is a direct alias to the user resource, so if `login_authority.resource` is `users` and the logged-in user has ID `Om77wPVRTJWZSjNf`, the `/me` will return the same result as `/users/Om77wPVRTJWZSjNf`.
@@ -335,7 +335,7 @@ var rem_options = {
     login_path: '/_login',
     signup_path: '/_signup',
     me_path: '/me',
-    annonymous_signup: false,
+    anonymous_signup: false,
     login_authority: {
       type: 'basic',
       resource: 'users',
@@ -355,9 +355,9 @@ var rem_options = {
 ```
 
 - `login_path`: The path at which to listen for logins.  Default: `/_login`
-- `signup_path`: The path at which to listen for new signups.  Does nothing if `annonymous_signup` is not set to `true`.  Default: `/_signup`
+- `signup_path`: The path at which to listen for new signups.  Does nothing if `anonymous_signup` is not set to `true`.  Default: `/_signup`
 - `me_path`: The path at which to expose data about the currently logged in user.  Default: `/me`
-- `annonymous_signup`: set to `true` if annonymous users are allowed to create new accounts by posting a login and password to the `signup_path`.  Default: `false` 
+- `anonymous_signup`: set to `true` if anonymous users are allowed to create new accounts by posting a login and password to the `signup_path`.  Default: `false` 
 - `login_authority.resource`: The resource to use as the user store.  It must already exist.  Default: `users`
 - `login_authority.login_property`: The property of the login authority resource to use when looking up login names.  Must be unique.  Default: `username`
 - `login_authority.type`: The type of login authority.  Currently, the only available type is `basic`, also the default.
