@@ -26,12 +26,14 @@ var options = {
         if ( identity.is_the_special )
           return true;
         else
+        {
           return {
             $and: [
               { owner: { $exists: true } },
               { owner: identity.organization }
             ]
           };
+        }
       },
       'update': 'mutable',
       'delete': false // only anonymous users can delete

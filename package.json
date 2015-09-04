@@ -20,24 +20,25 @@
     "url": "https://github.com/amcgee/remjs.git"
   },
   "dependencies": {
-    "lodash": "^2.4.1",
-    "express": "^4.10.2",
+    "bluebird": "^2.3.11",
     "body-parser": "^1.9.2",
-    "jwt-simple": "^0.2.0",
-    "bluebird": "^2.3.11"
+    "express": "^4.10.2",
+    "jwt-simple": "^0.3.1",
+    "lodash": "^3.10.1",
+    "traverse": "^0.6.6"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
-    "supertest": "^0.15.0",
-    "chai": "^1.10.0",
+    "supertest": "^1.1.0",
+    "chai": "^3.2.0",
     "coveralls": "^2.11.2",
-    "mocha-lcov-reporter": "0.0.1",
+    "mocha-lcov-reporter": "0.0.2",
     "istanbul": "^0.3.2",
     "jshint": "^2",
-    "retire": "^0.3.7",
+    "retire": "^1.1.1",
     "nedb": "^1.1.1",
-    "mongodb": "^1.4.28",
-    "knex": "^0.7.3"
+    "mongodb": "^2.0.42",
+    "knex": "^0.8.6"
   },
   "scripts": {
     "test": "jshint . && istanbul cover mocha --report lcovonly"
