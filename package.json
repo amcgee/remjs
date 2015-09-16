@@ -38,10 +38,11 @@
     "retire": "^1.1.1",
     "nedb": "^1.1.1",
     "mongodb": "^2.0.42",
-    "knex": "^0.8.6"
+    "knex": "^0.8.6",
+    "jscs": "https://github.com/ottumm/node-jscs#master"
   },
   "scripts": {
-    "test": "jshint . && istanbul cover mocha --report lcovonly"
+    "test": "scripts/test.sh"
   },
   "main": "index",
   "license": "MIT"

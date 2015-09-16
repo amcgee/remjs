@@ -1,8 +1,6 @@
 language: node_js
 node_js:
   - '0.12'
-  - '0.11'
-  - '0.10'
 services:
   - mongodb
 after_success:
@@ -18,3 +16,4 @@ deploy:
     repo: amcgee/remjs
 notifications:
   slack: welldonetech:yF3HybtHHNfxzf0nKhEyG0mC
+sudo: false

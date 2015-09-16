@@ -1,9 +1,19 @@
 {
-	"node": true,
-	"laxcomma": true,
-	"globalstrict": true,
-	"strict": false,
-	"quotmark": false,
-	"undef": true,
-	"unused": true
+  "node": true,
+  "laxcomma": true,
+  "globalstrict": true,
+  "strict": false,
+  "undef": true,
+  "unused": true,
+  "camelcase": false,
+  "curly": true,
+  "eqeqeq": true,
+  "freeze": true,
+  "indent": 2,
+  "newcap": true,
+  "quotmark": false,
+  "maxdepth": 3,
+  "maxstatements": 21,
+  "eqnull": true,
+  "funcscope": true
 }
