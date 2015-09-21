@@ -1,0 +1,12 @@
+{
+  "disallowTabs": true,
+  "disallowNewlineBeforeBlockStatements": true,
+  "disallowTrailingWhitespace": true,
+  "validateIndentation": {
+    "value": 4,
+    "allExcept": []
+  },
+  "validateLineBreaks": "LF",
+  "requireLineFeedAtFileEnd": true,
+  "excludeFiles": ["node_modules/**", "automation/**"]
+}

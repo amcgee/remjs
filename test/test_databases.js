@@ -1,4 +1,4 @@
 module.exports = {
-	'nedb': {},
-	'mongodb': {}
+    'nedb': {},
+    'mongodb': {}
 };
