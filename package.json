@@ -39,7 +39,7 @@
     "nedb": "^1.1.1",
     "mongodb": "^2.0.42",
     "knex": "^0.8.6",
-    "jscs": "https://github.com/ottumm/node-jscs#master"
+    "jscs": "^2.2.1"
   },
   "scripts": {
     "test": "scripts/test.sh"
