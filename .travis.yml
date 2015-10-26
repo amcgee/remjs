@@ -3,13 +3,12 @@ node_js:
   - '0.12'
 services:
   - mongodb
-after_success:
-  cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose
+after_success: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose
 deploy:
   provider: npm
   email: austinwm@gmail.com
   api_key:
-    secure: aEX8WNVjrTTHkeFZAMDA8OwER91lZR2cTPDtKVi/+KswPnf0XEey+tSc8AW2Jpd1Iw2u6ixHMbtA8yDDq3LoZcCls/Y/XQ9hahoa5SYCChQnu0TFDZXBG5b0YfLbcgkoOV3GSjhu7gVJn7RLJHNEeCBIhAF6e82dLGFyYzQZMDY=
+    secure: QCnRZSsPLjpul7AOUJrgsJAQKyHlWdS0og+KccYBXR2lawQEZurwrYhVEsQ2kc6le9Xd4Ris121a4RO5MRdaXTxFpT9AxCEoOvo7qb5PEe4Gr15IBKyVRwtGhIhmBHVDZYNeRI3U8gFs0BnLTCtLRrMCTDxBVpJkSfr6jRH6Lnk=
   on:
     tags: true
     all_branches: true
