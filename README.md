@@ -33,13 +33,13 @@ Currently, only NeDB and a subset of MongoDB are supported backend engines, but 
     - [Signup](#signup)
     - [/Me](#me)
     - [Authentication Options](#authentication-options)
-- [Utilities](#utilities)
-  - [REM Server](#rem-server)
-    - [REM.serve](#remserve)
-- [Other fun stuff](#other-fun-stuff)
-  - [Contributing](#contributing)
-    - [Tests](#tests)
-  - [License](#license)
+  - [Utilities](#utilities)
+    - [REM Server](#rem-server)
+      - [REM.serve](#remserve)
+  - [Other fun stuff](#other-fun-stuff)
+    - [Contributing](#contributing)
+      - [Tests](#tests)
+    - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
